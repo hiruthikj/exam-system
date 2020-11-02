@@ -61,6 +61,11 @@ TEMPLATES = [
     },
 ]
 
+# SETTINGS_PATH = os.path.normpath(os.path.dirname(__file__))
+# TEMPLATE_DIRS = (
+#     os.path.join(SETTINGS_PATH, 'templates'),
+# )
+
 WSGI_APPLICATION = 'exam_system.wsgi.application'
 
 
@@ -118,3 +123,5 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+LOGIN_REDIRECT_URL = '/students/home'

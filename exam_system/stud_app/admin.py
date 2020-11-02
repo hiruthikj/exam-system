@@ -3,6 +3,20 @@ import nested_admin
 from .models import * #Department, Course, Student
 
 # Register your models here.
+# class StudentAdmin(admin.ModelAdmin):
+
+#     fieldsets = [
+#         ('Course Info',         {'fields': ['course_fk', 'exams']}),
+#         ('Question Info',       {'fields': ['qn_text','pub_date','qn_image']}),
+#     ]
+#     inlines = [ChoiceInline]
+#     list_display = ['qn_text', 'pub_date', 'was_published_recently']   #course fk
+#     list_filter = ['pub_date']
+    
+#     search_fields = ['qn_text']
+#     readonly_fields = ('pub_date',)
+
+
 class ChoiceInline(nested_admin.NestedTabularInline):
     extra = 0
     model = Choice
@@ -64,7 +78,7 @@ class ExamAdmin(admin.ModelAdmin):
     readonly_fields = ('pub_date',)
 
 # Register your models here.
-admin.site.register(Student)
+admin.site.register(Student, StudentAdmin)
 admin.site.register(Department,DepartmentAdmin)
 
 admin.site.register(Question, QuestionAdmin)
