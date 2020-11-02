@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # third-party apps
     'django_extensions',
+    'nested_admin',
     # local apps
     'stud_app.apps.StudAppConfig',
 ]
