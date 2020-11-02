@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 
 import datetime
 from django.utils import timezone
+from django.utils.html import mark_safe
 
 class Department(models.Model):
     dept_code = models.CharField(max_length=3)
@@ -44,20 +45,31 @@ class Student(models.Model):
 # post_save.connect(create_profile,sender=User)
 
 
-class QuestionBank(models.Model):
-    course_fk = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Belongs to')
-
-    def __str__(self):
-        return self.course_fk.course_code
+# class QuestionBank(models.Model):
+#     question_fk = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Belongs to')
+#     def __str__(self):
+#         return self.course_fk.course_code
 
 class Question(models.Model):
     qn_text = models.TextField('Question Description',max_length=200)
-    qn_image = models.ImageField('Question Image')
-    qn_bank = models.ForeignKey(QuestionBank, on_delete=models.CASCADE, verbose_name='IN QNbank')
-    pub_date = models.DateTimeField('date published')
+    qn_image = models.ImageField('Question Image', upload_to='img/')
+    # qn_bank = models.ForeignKey(QuestionBank, on_delete=models.CASCADE, verbose_name='IN QNbank')
+    course_fk = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='Belongs to',null=True,blank=True)
+    pub_date = models.DateTimeField('date published', auto_now_add=True, editable=False)
 
     def __str__(self):
-        return self.question_text
+        return self.qn_text[:15]
+
+    # def image_tag(self):
+    #     from django.utils.html import escape
+    #     return u'<img src="%s" />' % escape(<URL to the image>)
+    # image_tag.short_description = 'Image'
+    # image_tag.allow_tags = True
+
+    def image_tag(self):
+            return mark_safe('<img src="%s" width="150" height="150" alt="Question Image">' % (self.qn_image))
+
+    image_tag.short_description = 'Image'
 
     def was_published_recently(self):
         now = timezone.now()
