@@ -22,7 +22,7 @@ import nested_admin
 class StudentAdmin(admin.ModelAdmin):
 
     fieldsets = [
-        ('Login Info',         {'fields': ['user']}),
+        ('Login Info',         {'fields': ['user','firstname','lastname','email']}),
         ('Personal Info',      {'fields': ['phone_no','birth_date',]}),
     ]
     # inlines = [UserInline]
@@ -104,7 +104,7 @@ class MyUserAdmin(UserAdmin):
 
 # Register your models here.
 
-# admin.site.register(User, UserAdmin)
+# admin.site.register(User)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Department,DepartmentAdmin)
 

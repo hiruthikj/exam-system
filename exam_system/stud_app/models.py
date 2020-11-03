@@ -27,11 +27,18 @@ class Course(models.Model):
 
 class Student(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE, null=True, blank=True)
-    #firstname, lastname, username, password, email
     # course_fk = models.ManyToManyField(Course)  #, on_delete=models.CASCADE)
     # dept_fk = models.ForeignKey(Department, on_delete=models.CASCADE,null=True,blank=True)
     birth_date = models.DateField(null=True, blank=True)
     phone_no = models.IntegerField(default=0)
+    firstname = models.CharField(max_length=20, null=True, blank=True)
+    lastname = models.CharField(max_length=20, null=True, blank=True)
+    email = models.EmailField(max_length=50, null=True, blank=True)
+
+    # def assign_things(self)
+    #     user.first_name = self.firstname
+    #     user.last_name = self.lastname
+    #     user.email = self.email
 
     # def __str__(self):
     #     return self.user.first_name + self.user.last_name
