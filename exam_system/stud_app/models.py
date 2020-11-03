@@ -27,12 +27,12 @@ class Course(models.Model):
 
 class Student(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE, null=True, blank=True)
-    # course_fk = models.ManyToManyField(Course)  #, on_delete=models.CASCADE)
-    # dept_fk = models.ForeignKey(Department, on_delete=models.CASCADE,null=True,blank=True)
+    course_fk = models.ManyToManyField(Course)  #, on_delete=models.CASCADE)
+    dept_fk = models.ForeignKey(Department, on_delete=models.CASCADE,null=True,blank=True)
     birth_date = models.DateField(null=True, blank=True)
     phone_no = models.IntegerField(default=0)
-    firstname = models.CharField(max_length=20, null=True, blank=True)
-    lastname = models.CharField(max_length=20, null=True, blank=True)
+    first_name = models.CharField(max_length=20, null=True, blank=True)
+    last_name = models.CharField(max_length=20, null=True, blank=True)
     email = models.EmailField(max_length=50, null=True, blank=True)
 
     # def assign_things(self)
@@ -40,8 +40,8 @@ class Student(models.Model):
     #     user.last_name = self.lastname
     #     user.email = self.email
 
-    # def __str__(self):
-    #     return self.user.first_name + self.user.last_name
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
 # def create_profile(sender,**kwargs):
 #     if kwargs['created']:

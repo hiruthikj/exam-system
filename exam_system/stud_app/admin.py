@@ -5,25 +5,12 @@ from .models import *
 
 import nested_admin
 
-# admin.site.unregister(User)
-
-# class StudentInline(admin.StackedInline):
-#     model = Student
-#     can_delete = False
-#     verbose_name_plural = 'students'
-
-# class StudentAdmin(UserAdmin):
-#     inlines = (StudentInline,)
-
-# class UserInline(admin.StackedInline):
-#     model = User
-#     can_delete = False
-
 class StudentAdmin(admin.ModelAdmin):
 
     fieldsets = [
-        ('Login Info',         {'fields': ['user','firstname','lastname','email']}),
-        ('Personal Info',      {'fields': ['phone_no','birth_date',]}),
+        ('Login Info',         {'fields': ['user','first_name','last_name',]}),
+        ('Academic Info',      {'fields': ['dept_fk','course_fk']}),
+        ('Personal Info',      {'fields': ['email','phone_no','birth_date',]}),
     ]
     # inlines = [UserInline]
     # list_display = ['qn_text', 'pub_date', 'was_published_recently']   #course fk
