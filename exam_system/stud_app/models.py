@@ -1,17 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 import datetime
 from django.utils import timezone
-from django.utils.html import mark_safe
+# from django.utils.html import mark_safe
+from .thumbs import ImageWithThumbsField
 
 class Department(models.Model):
     dept_code = models.CharField(max_length=3)
     dept_name = models.CharField(max_length=50)
-
-    # class Meta:
-    #     ordering = ['dept_name', 'dept_code']
 
     def __str__(self):
         return self.dept_name
@@ -23,20 +22,19 @@ class Course(models.Model):
     #dept_fk = models.ManyToManyField(Department, on_delete=models.SET_NULL)
     course_desc = models.TextField('Course Description',max_length=100)
     
-    # class Meta:
-    #     ordering = ['course_code']
-
     def __str__(self):
         return self.course_name
 
 class Student(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE) #firstname, lastname, username, password, email
-    course_fk = models.ManyToManyField(Course)  #, on_delete=models.CASCADE)
-    dept_fk = models.ForeignKey(Department, on_delete=models.CASCADE,null=False)
-    phone = models.IntegerField(default=0)
+    user = models.ForeignKey(User,on_delete=models.CASCADE, null=True, blank=True)
+    #firstname, lastname, username, password, email
+    # course_fk = models.ManyToManyField(Course)  #, on_delete=models.CASCADE)
+    # dept_fk = models.ForeignKey(Department, on_delete=models.CASCADE,null=True,blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    phone_no = models.IntegerField(default=0)
 
-    def __str__(self):
-        return self.user.first_name + self.user.last_name
+    # def __str__(self):
+    #     return self.user.first_name + self.user.last_name
 
 # def create_profile(sender,**kwargs):
 #     if kwargs['created']:
@@ -44,6 +42,14 @@ class Student(models.Model):
 
 # post_save.connect(create_profile,sender=User)
 
+# @receiver(post_save, sender=User)
+# def create_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         Student.objects.create(user=instance)
+
+# @receiver(post_save, sender=User)
+# def save_user_profile(sender, instance, **kwargs):
+#     instance.profile.save()
 
 # class QuestionBank(models.Model):
 #     question_fk = models.ForeignKey('Course', Course, on_delete=models.CASCADE)
@@ -72,7 +78,7 @@ class Exam(models.Model):
 
 class Question(models.Model):
     qn_text = models.TextField('Question Description',max_length=200)
-    qn_image = models.ImageField('Question Image', upload_to='img/')
+    qn_image = ImageWithThumbsField('Question Image', upload_to='img/', sizes=((125,125),(300,200)))
     # qn_bank = models.ForeignKey(QuestionBank, on_delete=models.CASCADE, verbose_name='IN QNbank')
     exams = models.ManyToManyField(Exam)
     course_fk = models.ForeignKey(Course, verbose_name='Course', on_delete=models.CASCADE, null=True, blank=True)
@@ -84,14 +90,19 @@ class Question(models.Model):
 
     # def image_tag(self):
     #     from django.utils.html import escape
-    #     return u'<img src="%s" />' % escape(<URL to the image>)
+    #     return u'<img src="%s" />' % escape(self.qn_image)
     # image_tag.short_description = 'Image'
     # image_tag.allow_tags = True
 
-    def image_tag(self):
-            return mark_safe('<img src="%s" width="150" height="150" alt="Question Image">' % (self.qn_image))
+    # def image_img(self):
+    #     if self.image:
+    #         return mark_safe('<img src="%s" />' % self.qn_image.url_125x125)
+    #     else:
+    #         return '(No image)'
+    # image_img.short_description = 'Thumb'
 
-    image_tag.short_description = 'Image'
+    # def image_tag(self):
+    #         return mark_safe('<img src="%s" width="150" height="150" alt="Question Image">' % (self.qn_image))
 
     def was_published_recently(self):
         now = timezone.now()

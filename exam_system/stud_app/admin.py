@@ -1,20 +1,36 @@
 from django.contrib import admin
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
+from .models import * 
+
 import nested_admin
-from .models import * #Department, Course, Student
 
-# Register your models here.
-# class StudentAdmin(admin.ModelAdmin):
+# admin.site.unregister(User)
 
-#     fieldsets = [
-#         ('Course Info',         {'fields': ['course_fk', 'exams']}),
-#         ('Question Info',       {'fields': ['qn_text','pub_date','qn_image']}),
-#     ]
-#     inlines = [ChoiceInline]
-#     list_display = ['qn_text', 'pub_date', 'was_published_recently']   #course fk
-#     list_filter = ['pub_date']
+# class StudentInline(admin.StackedInline):
+#     model = Student
+#     can_delete = False
+#     verbose_name_plural = 'students'
+
+# class StudentAdmin(UserAdmin):
+#     inlines = (StudentInline,)
+
+# class UserInline(admin.StackedInline):
+#     model = User
+#     can_delete = False
+
+class StudentAdmin(admin.ModelAdmin):
+
+    fieldsets = [
+        ('Login Info',         {'fields': ['user']}),
+        ('Personal Info',      {'fields': ['phone_no','birth_date',]}),
+    ]
+    # inlines = [UserInline]
+    # list_display = ['qn_text', 'pub_date', 'was_published_recently']   #course fk
+    # list_filter = ['user.username']
     
-#     search_fields = ['qn_text']
-#     readonly_fields = ('pub_date',)
+    search_fields = ['user']
+    # readonly_fields = ('pub_date',)
 
 
 class ChoiceInline(nested_admin.NestedTabularInline):
@@ -25,10 +41,10 @@ class QuestionAdmin(admin.ModelAdmin):
 
     fieldsets = [
         ('Course Info',         {'fields': ['course_fk', 'exams']}),
-        ('Question Info',       {'fields': ['qn_text','pub_date','qn_image']}),
+        ('Question Info',       {'fields': ['qn_text','pub_date','qn_image',]}),
     ]
     inlines = [ChoiceInline]
-    list_display = ['qn_text', 'pub_date', 'was_published_recently']   #course fk
+    # list_display = ['qn_text', 'pub_date', 'was_published_recently']   #course fk
     list_filter = ['pub_date']
     
     search_fields = ['qn_text']
@@ -77,7 +93,18 @@ class ExamAdmin(admin.ModelAdmin):
 
     readonly_fields = ('pub_date',)
 
+class MyUserAdmin(UserAdmin):
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')}
+        ),
+    )
+
+
 # Register your models here.
+
+# admin.site.register(User, UserAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Department,DepartmentAdmin)
 
@@ -85,4 +112,4 @@ admin.site.register(Question, QuestionAdmin)
 # admin.site.register(QuestionBank, QuestionBankAdmin)
 
 admin.site.register(Exam, ExamAdmin)
-admin.site.register(Result)
+admin.site.register(Result) 
