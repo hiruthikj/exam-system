@@ -12,7 +12,7 @@ from .models import *
 # from .forms import *
 # from django.views.generic.edit import FormView
 
-@login_required
+# @login_required    #(login_url=reverse('stud_app:login'))
 def home(request):
     return render(request, 'base.html')
 

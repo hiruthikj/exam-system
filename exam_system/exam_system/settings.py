@@ -127,6 +127,8 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# LOGIN_URL = 'stud_app.views.login_view'
-#   
+LOGIN_URL = '/students/login/'
+#
+# LOGIN_URL = reverse('stud_app:login') wont work as apps arent loaded
+#  
 # AUTH_USER_MODEL = 'core.User'
