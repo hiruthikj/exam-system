@@ -6,17 +6,17 @@ from django.dispatch import receiver
 import datetime
 from django.utils import timezone
 # from django.utils.html import mark_safe
-from .thumbs import ImageWithThumbsField
+# from .thumbs import ImageWithThumbsField
 
 class Department(models.Model):
-    dept_code = models.CharField(max_length=3)
+    dept_code = models.CharField(max_length=3, unique=True)
     dept_name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.dept_name
 
 class Course(models.Model):
-    course_code = models.CharField(max_length=6)
+    course_code = models.CharField(max_length=6, unique=True)
     course_name = models.CharField(max_length=50)
     dept_fk = models.ForeignKey(Department, on_delete=models.CASCADE)
     #dept_fk = models.ManyToManyField(Department, on_delete=models.SET_NULL)
@@ -26,22 +26,21 @@ class Course(models.Model):
         return self.course_name
 
 class Student(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE, null=True, blank=True)
-    course_fk = models.ManyToManyField(Course)  #, on_delete=models.CASCADE)
-    dept_fk = models.ForeignKey(Department, on_delete=models.CASCADE,null=True,blank=True)
+    user = models.OneToOneField(User, related_name='usserrr', on_delete=models.CASCADE, unique=True)
+    course_fk = models.ManyToManyField(Course)  
+    dept_fk = models.ForeignKey('Department', on_delete=models.CASCADE, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    phone_no = models.IntegerField(default=0)
-    first_name = models.CharField(max_length=20, null=True, blank=True)
-    last_name = models.CharField(max_length=20, null=True, blank=True)
-    email = models.EmailField(max_length=50, null=True, blank=True)
+    phone_no = models.CharField(max_length=10, null=True, blank=True, unique=True, help_text='10-digit phone number only') 
 
-    # def assign_things(self)
-    #     user.first_name = self.firstname
-    #     user.last_name = self.lastname
-    #     user.email = self.email
+    # def __str__(self):
+    #     return f"{self.first_name} {self.last_name}"
 
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+    def get_name(self):
+        return (self.user.first_name, self.user.last_name)
+    
+    def get_username(self):
+        return self.user.username
+
 
 # def create_profile(sender,**kwargs):
 #     if kwargs['created']:
@@ -66,9 +65,11 @@ class Student(models.Model):
 class Exam(models.Model):
     exam_name = models.CharField(max_length=40)
     course_fk = models.ForeignKey(Course, verbose_name='Course', on_delete=models.CASCADE, null=True, blank=True)
-    # question_fk = models.ManyToManyField(Question)
+    # question_fk = models.ManyToManyField('Question')
 
     time_limit = models.DurationField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
     pub_date = models.DateTimeField('Date Published', auto_now_add=True, editable=False)
 
     def was_published_recently(self):
@@ -82,15 +83,19 @@ class Exam(models.Model):
     def __str__(self):
         return self.exam_name
 
+class QuestionTag(models.Model):
+    tag_name = models.TextField(max_length=20, unique=True)
 
 class Question(models.Model):
     qn_text = models.TextField('Question Description',max_length=200)
-    qn_image = ImageWithThumbsField('Question Image', upload_to='img/', sizes=((125,125),(300,200)))
-    # qn_bank = models.ForeignKey(QuestionBank, on_delete=models.CASCADE, verbose_name='IN QNbank')
-    exams = models.ManyToManyField(Exam)
+    qn_image = models.ImageField('Question Image', null=True, blank=True)
+    qn_tag = models.ForeignKey(QuestionTag, verbose_name='Tag', on_delete=models.CASCADE, null=True, blank=True)
+    exams = models.ManyToManyField('Exam')
     course_fk = models.ForeignKey(Course, verbose_name='Course', on_delete=models.CASCADE, null=True, blank=True)
     pub_date = models.DateTimeField('date published', auto_now_add=True, editable=False)
+    # qn_image = ImageWithThumbsField('Question Image', upload_to='img/', sizes=((125,125),(300,200)))
     # correct_choice = models.ForeignKey(Choice)
+    # qn_bank = models.ForeignKey(QuestionBank, on_delete=models.CASCADE, verbose_name='IN QNbank')
 
     def __str__(self):
         return self.qn_text[:20]

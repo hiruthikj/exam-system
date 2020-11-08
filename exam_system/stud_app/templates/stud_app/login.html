@@ -1,11 +1,33 @@
+{% extends 'stud_app/base.html' %}
+{% load static %}
 
-{% block body %}
-    <div>
-        <h2>Login</h2>
-        <form method="post">
+{% block title %}LOGIN{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'stud_app/css/login.css' %}">
+{% endblock %}
+
+{% block content %}    
+<div class="container">
+    <div class="card card-container form-group">
+        <p id="profile-name" class="profile-name-card"><img src="{% static 'stud_app/img/university.svg' %}" alt="university logo"></p>
+        <h1 id="#pageTitle">ONLINE EXAM SYSTEM</h1>
+
+        <form action="{% url 'stud_app:login' %}" method="post" class="form-signin">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Login</button>
+
+            <input type="text" name="username" id="inputUserID" class="form-control" placeholder="User ID" required autofocus>
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            
+            <button type="submit" class="btn btn-lg btn-primary btn-block btn-signin">Sign in</button>
         </form>
+        {% if no_user  %}
+        <button type="button" class="btn btn-danger" disabled id="invalidPwd">Invalid User ID!</button>
+        {% endif %}
+        {% if wrong_password %}
+        <button type="button" class="btn btn-danger" disabled id="invalidPwd">Invalid Password!</button>
+        {% endif %}
     </div>
+</div>
+
 {% endblock %}

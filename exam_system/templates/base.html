@@ -1,0 +1,55 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}Default Title{% endblock %}</title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous">
+        {% block head %}{% endblock %}
+
+    </head>
+    <body>
+
+    {% block nav %}
+    <nav class="navbar navbar-expand-lg navbar-extend-sm bg-primary navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" id="univLogo" href="#"><span class="fas fa-university"> Online Exam System</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#Navbar">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id='Navbar'>
+                <div class="navbar-nav">
+                <a class="nav-item nav-link" href="#"><span class="fas fa-user-graduate"></span> My Details</a>
+                <a class="nav-item nav-link active" href="#"><span class="fas fa-book-open"></span> Courses</a>
+                <a class="nav-item nav-link" href="#"><span class="fas fa-edit"></span> Exams</a>
+                <a class="nav-item nav-link" href="#"><span class="fas fa-file-alt"></span> Scores</a>
+                </div>
+
+                <div class="navbar-nav ml-auto">
+                <a class="nav-item nav-link ml-auto" href="#"><span class="fas fa-sign-out-alt"></span> Log Out</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% endblock %}
+
+
+    {% block breadcrumb %}
+    <ol class="breadcrumb container">
+        <li class="breadcrumb-item active"><a href="#">Home</a></li>
+    </ol>
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </body>
+</html>

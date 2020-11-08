@@ -5,22 +5,69 @@ from .models import *
 
 import nested_admin
 
+
+# class DepartmentInline(admin.TabularInline):
+#     # extra = 0
+#     model = Department
+
+# class CourseAdmin(admin.ModelAdmin):
+#     fieldsets = [
+#         ('Course Info',               {'fields': ['course_code','course_name', 'course_desc']}),
+#         # ('Date information',            {'fields': []}),
+#     ]
+#     inlines = [DepartmentInline]
+#     list_display = ['course_code', 'dept_fk']
+#     search_fields = ['course_name']
+#     list_filter = ['dept_fk']
+
+class CourseInline(admin.TabularInline):
+    extra = 0
+    model = Course
+
+class DepartmentAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Department Info',               {'fields': ['dept_code','dept_name']}),
+        # ('Date information',            {'fields': []}),
+    ]
+    inlines = [CourseInline]
+    list_display = ['dept_code', 'dept_name']
+    search_fields = ['dept_name']
+    list_filter = ['dept_code']
+
 class StudentAdmin(admin.ModelAdmin):
 
     fieldsets = [
-        ('Login Info',         {'fields': ['user','first_name','last_name',]}),
+        ('Login Info',         {'fields': ['user',]}),
         ('Academic Info',      {'fields': ['dept_fk','course_fk']}),
-        ('Personal Info',      {'fields': ['email','phone_no','birth_date',]}),
+        ('Personal Info',      {'fields': ['phone_no','birth_date',]}),
     ]
     # inlines = [UserInline]
     # list_display = ['qn_text', 'pub_date', 'was_published_recently']   #course fk
     # list_filter = ['user.username']
     
-    search_fields = ['user']
+    # search_fields = ['user']
     # readonly_fields = ('pub_date',)
 
 
-class ChoiceInline(nested_admin.NestedTabularInline):
+class StudentInline(admin.StackedInline):
+    model = Student
+
+    class Meta:
+        readonly_fields = ('date_joined','last_login')
+
+class CustomUserAdmin(UserAdmin):
+
+    inlines = (StudentInline, )
+
+    # list_display = ['qn_text', 'pub_date', 'was_published_recently']   #course fk
+    # list_filter = ['get_username()']
+    
+    # search_fields = ['username']
+    # readonly_fields = ('pub_date',)
+    
+
+
+class ChoiceInline(admin.TabularInline):
     extra = 0
     model = Choice
 
@@ -56,18 +103,7 @@ class QuestionAdmin(admin.ModelAdmin):
     
 #     search_fields = ['qn_text']
 
-class CourseInline(admin.TabularInline):
-    extra = 1
-    model = Course
 
-class DepartmentAdmin(admin.ModelAdmin):
-    fieldsets = [
-        ('Department Info',               {'fields': ['dept_code','dept_name']}),
-        # ('Date information',            {'fields': []}),
-    ]
-    inlines = [CourseInline]
-    list_display = ['dept_code', 'dept_name']
-    search_fields = ['course_fk']
 
 class ExamAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -91,9 +127,12 @@ class MyUserAdmin(UserAdmin):
 
 # Register your models here.
 
-# admin.site.register(User)
+# admin.site.unregister(User)
+# admin.site.register(User, CustomUserAdmin)
 admin.site.register(Student, StudentAdmin)
+
 admin.site.register(Department,DepartmentAdmin)
+# admin.site.register(Course,CourseAdmin)
 
 admin.site.register(Question, QuestionAdmin)
 # admin.site.register(QuestionBank, QuestionBankAdmin)
