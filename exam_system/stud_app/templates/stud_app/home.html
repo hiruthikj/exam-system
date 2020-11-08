@@ -1,7 +1,9 @@
-<!-- <p>home</p>
-
-<button><a href="{% url 'stud_app:logout' %}">LOGOUT</a></button> -->
-
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}HOME{% endblock %}
+
+{% block content %}
+<p>page of {{ username }}</p>
+{% endblock %}
+

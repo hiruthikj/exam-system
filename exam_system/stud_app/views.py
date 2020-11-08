@@ -13,8 +13,10 @@ from .models import *
 # from django.views.generic.edit import FormView
 
 # @login_required    #(login_url=reverse('stud_app:login'))
-def home(request):
-    return render(request, 'base.html')
+def home(request, username):
+    return render(request, 'stud_app/home.html', context={
+        'username' : username,
+    })
 
 def login_view(request):
     if request.method == 'POST':
@@ -33,7 +35,7 @@ def login_view(request):
             if student.user.check_password(password):
                 # return HttpResponse("HOME")
                 # return HttpResponseRedirect('students/home/')
-                return HttpResponseRedirect(reverse('stud_app:home'))
+                return HttpResponseRedirect(reverse('stud_app:home', args=[username,]))
             else:
                 context = { 
                 'wrong_password' : True,
