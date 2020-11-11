@@ -107,8 +107,8 @@ class QuestionAdmin(admin.ModelAdmin):
 
 class ExamAdmin(admin.ModelAdmin):
     fieldsets = [
-        ('Exam Info',               {'fields': ['course_fk','exam_name','time_limit','pub_date']}),
-        # ('Questions',               {'fields': []}),
+        ('Exam Info',               {'fields': ['course_fk','exam_name',]}),
+        ('Other Info',               {'fields': ['time_limit','pub_date',]}),
     ]
     # inlines = [CourseInline]
     # list_display = ['dept_code', 'dept_name']

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Courses{% endblock %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'stud_app/css/cards.css' %}">
+{% endblock %}
+    
+    
+{% block content %}
+{% for course in courses %}
+
+<!-- Card -->
+<div class="container">
+<div class="row">
+<div class="col-2"></div>
+<div class="col-8">
+
+    <div class="courses-container">
+        <div class="course">
+            <div class="course-preview">
+                <h6>{{ course.course_code }}</h6>
+                <h2>{{ course.course_name }}</h2>
+            </div>
+            <div class="course-info">
+                <!-- <div class="progress-container">
+                    <div class="progress"></div>
+                    <span class="progress-text">
+                        6/9 Challenges
+                    </span>
+                </div> -->
+                <h6>Course Details</h6>
+                <p>{{ course.course_desc }}</p>
+                <!-- <a href="#">Course Details <i class="fa fa-chevron-right"></i></a>
+                <button class="btn">Continue</button> -->
+            </div>
+        </div>
+    </div>
+            
+    
+</div>
+</div>
+</div>
+
+{% endfor %}
+
+{% endblock %}

@@ -9,10 +9,14 @@ app_name = 'stud_app'
 
 urlpatterns = [
 
-    # url('', LoginView.as_view(template_name='stud_app/login.html',authentication_form=StudentLoginForm), name="login"),
+    # path('', LoginView.as_view(template_name='stud_app/login.html',authentication_form=StudentLoginForm), name="login"),
     # url('login/',  views.StudentView.as_view(), name="login"),
+
+    path('', views.blank_page),
     path('login/',  views.login_view, name="login"),
     path('logout/', LogoutView.as_view(template_name='stud_app/logout.html'), name="logout"),
-    # url(r'^home/(?P<username>[A-Za-z0-9]+)/$', views.home, name="home"),
-    path('<username>/home/', views.home, name="home"),
+    path('<username>/home/', views.home_view, name="home"),
+    path('<username>/courses/', views.courses_view, name="courses"),
+    path('<username>/exams/', views.exam_list_view, name="exams"),
+
 ]

@@ -1,22 +1,23 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpRequest
 from django.urls import reverse
-# from django.views import generic
+from django.db.models import Q
 
-# from django.contrib import messages
-# from django.contrib.auth import login, logout, authenticate
-# from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
 from .models import *
-# from .forms import *
-# from django.views.generic.edit import FormView
 
-# @login_required    #(login_url=reverse('stud_app:login'))
-def home(request, username):
+# @login_required(login_url=reverse('stud_app:login'))       circular call
+# @login_required(login_url='/students/login')
+def home_view(request, username):
     return render(request, 'stud_app/home.html', context={
         'username' : username,
     })
+
+
+
+def blank_page(request):
+    return HttpResponseRedirect(reverse('stud_app:login'))
 
 def login_view(request):
     if request.method == 'POST':
@@ -50,6 +51,35 @@ def login_view(request):
                 'no_user' : False,
             } 
         return render(request, 'stud_app/login.html', context)
+
+
+def courses_view(request, username):
+    if request.method == 'POST':
+        pass
+    else:
+        student = get_object_or_404(Student, user__username = username)
+        courses = student.course_fk.all()
+        context = { 
+                'username': username,
+                'courses': courses,
+            } 
+        return render(request, 'stud_app/courses.html', context)
+
+def exam_list_view(request, username):
+    if request.method == 'POST':
+        pass
+    else:
+        student = get_object_or_404(Student, user__username = username)
+        courses = student.course_fk.all()
+        exams = Exam.objects.filter(course_fk__in=courses)
+
+        context = { 
+                'username': username,
+                'exams': exams,
+            } 
+        return render(request, 'stud_app/exam_list.html', context)
+
+
 
 # class StudentView(FormView):
 #     template_name = 'stud_app/login.html'

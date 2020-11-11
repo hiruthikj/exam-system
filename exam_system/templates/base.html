@@ -11,9 +11,31 @@
         
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/5.1.1/bootstrap-social.min.css" integrity="sha512-f8mUMCRNrJxPBDzPJx3n+Y5TC5xp6SmStstEfgsDXZJTcxBakoB5hvPLhAfJKa9rCvH+n3xpJ2vQByxLk4WP2g==" crossorigin="anonymous" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous">
         <link rel="stylesheet" href="{% static 'css/master.css' %}">
+        
+        <style>
+            #MyNav{
+  margin-bottom: 10px;
+}
+#univLogo{
+  color: #5f2c82;
+}
+
+body, html {
+  height: 100%;
+  background-repeat: no-repeat;
+  /* background-color: #85FFBD;
+background-image: linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%); */
+/* background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(153,103,186,1) 41.2%, rgba(0,113,227,1) 90% ); */
+background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(147,230,241,1) 0%, rgba(145,192,241,1) 45.5% );
+}
+
+        </style>
+        
         {% block head %}{% endblock %}
+        
 
     </head>
     <body>
@@ -27,9 +49,9 @@
             </button>
             <div class="collapse navbar-collapse" id='Navbar'>
                 <div class="navbar-nav">
-                <a class="nav-item nav-link" href="#"><span class="fas fa-user-graduate"></span> My Details</a>
-                <a class="nav-item nav-link active" href="#"><span class="fas fa-book-open"></span> Courses</a>
-                <a class="nav-item nav-link" href="#"><span class="fas fa-edit"></span> Exams</a>
+                <a class="nav-item nav-link" href="{% url 'stud_app:home' username %}"><span class="fas fa-user-graduate"></span> My Details</a>
+                <a class="nav-item nav-link" href="{% url 'stud_app:courses' username %}"><span class="fas fa-book-open"></span> Courses</a>
+                <a class="nav-item nav-link" href="{% url 'stud_app:exams' username %}"><span class="fas fa-edit"></span> Exams</a>
                 <a class="nav-item nav-link" href="#"><span class="fas fa-file-alt"></span> Scores</a>
                 </div>
 
@@ -42,11 +64,11 @@
     {% endblock %}
 
 
-    {% block breadcrumb %}
+    <!-- {% block breadcrumb %}
     <ol class="breadcrumb container">
         <li class="breadcrumb-item active"><a href="#">Home</a></li>
     </ol>
-    {% endblock %}
+    {% endblock %} -->
 
     {% block content %}
     {% endblock %}

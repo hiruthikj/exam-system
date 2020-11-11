@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Exams{% endblock %}
+
+
+{% block head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/3.12.2/less.min.js" integrity="sha512-rCgfeoOQxpi926f8I0zdBVUY9q/2SKXqrdIy23yEPuvWvJ8/jwDqhQ0eJJhS9L8ySZsmbEQp3LCgPTiaAk5WVw==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'stud_app/css/exam_list.css' %}">
+{% endblock %}
+    
+    
+{% block content %}
+
+<div class="container">
+<div class="row">
+<div class="col-2"></div>
+<div class="col-8">
+
+    <div class="table-container">
+        <table> 
+            <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Exam</th>
+                    <th>Start Time</th>
+                    <th>Time Limit</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for exam in exams %}
+                <tr>
+                    <td>{{ exam.course_fk.course_name }}</td>
+                    <td>{{ exam.exam_name }}</td>
+                    <td>{{ exam.start_time }}</td>
+                    <td>{{ exam.time_limit }}</td>
+
+                </tr>
+                {% endfor %}
+    
+            </tbody>
+        </table>
+    </div>
+            
+    
+</div>
+</div>
+</div>
+
+
+{% endblock %}

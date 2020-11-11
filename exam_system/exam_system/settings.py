@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     # third-party apps
     'django_extensions',
     'nested_admin',
+    'durationwidget',
     # local apps
     'stud_app.apps.StudAppConfig',
 ]
@@ -121,6 +122,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),    
+    # os.path.dirname(os.path.realpath(__file__)) + '/static/',
 ]
 
 

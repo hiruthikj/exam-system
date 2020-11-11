@@ -1,3 +1,12 @@
 #MyNav{
-    margin-bottom: 10px;
+  margin-bottom: 10px;
+}
+#univLogo{
+  color: #5f2c82;
+}
+
+body, html {
+  height: 100%;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
 }
