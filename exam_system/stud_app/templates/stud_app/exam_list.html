@@ -17,6 +17,8 @@
 <div class="col-2"></div>
 <div class="col-8">
 
+<form action="" method="post">
+    {% csrf_token %}
     <div class="table-container">
         <table> 
             <thead>
@@ -25,7 +27,7 @@
                     <th>Exam</th>
                     <th>Start Time</th>
                     <th>Time Limit</th>
-
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -35,6 +37,7 @@
                     <td>{{ exam.exam_name }}</td>
                     <td>{{ exam.start_time }}</td>
                     <td>{{ exam.time_limit }}</td>
+                    <td><button type="submit" name="{{ exam.id }}" class="btn btn-lg btn-primary btn-block btn-signin" value="{{ exam.id}}">Enter</button></td>
 
                 </tr>
                 {% endfor %}
@@ -42,7 +45,7 @@
             </tbody>
         </table>
     </div>
-            
+</form>           
     
 </div>
 </div>

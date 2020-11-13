@@ -67,7 +67,14 @@ def courses_view(request, username):
 
 def exam_list_view(request, username):
     if request.method == 'POST':
-        pass
+        exams = Exam.objects.all()
+        for exam in exams:
+            if str(exam.id) in request.POST:
+                # return HttpResponse('Attending exam' + exam.exam_name)
+                return HttpResponseRedirect(reverse('stud_app:exams', args=[username, exam.id,]))
+        else:
+            return HttpResponse('NO such exams\n',request.POST)
+
     else:
         student = get_object_or_404(Student, user__username = username)
         courses = student.course_fk.all()
@@ -79,6 +86,21 @@ def exam_list_view(request, username):
             } 
         return render(request, 'stud_app/exam_list.html', context)
 
+
+def exam_view(request, username, exam_id):
+    if request.method == 'POST':
+        pass
+    else:
+        student = get_object_or_404(Student, user__username = username)
+        # courses = student.course_fk.all()
+        exam = Exam.objects.get(id=exam_id)
+        # questions = 
+
+        context = { 
+                'username': username,
+                'exam': exam,
+            } 
+        return render(request, 'stud_app/exam.html', context)
 
 
 # class StudentView(FormView):

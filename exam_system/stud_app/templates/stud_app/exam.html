@@ -1,0 +1,9 @@
+{% for qn in exam.question_set.all %}
+    {{qn.qn_text}}
+    
+    {% for choice in qn.choice_set.all %}
+        {{ choice.choice_text }}
+        {{ choice.is_correct }}
+    {% endfor %}
+{% endfor %}
+        

@@ -14,11 +14,23 @@ class StudentLoginForm(AuthenticationForm):
         super(StudentLoginForm, self).__init__(*args, **kwargs)
 
     username = forms.EmailField(widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': '', 'id': 'hello'}))
+        attrs={'class': 'form-control', 'placeholder': '', 'id': 'hello'})
+    )
     password = forms.CharField(widget=forms.PasswordInput(
         attrs={
             'class': 'form-control',
             'placeholder': '',
             'id': 'hi',
         }
-))
+    ))
+
+class tryingForm(forms.Form):
+    name = forms.CharField(max_length=5)
+    pwd = forms.PasswordInput()
+    num = forms.IntegerField()
+
+
+# class QuestionForm(forms.ModelForm):
+#     class Meta:
+#         model = Question
+#         fields = 
