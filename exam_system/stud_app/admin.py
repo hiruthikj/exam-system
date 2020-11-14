@@ -138,4 +138,4 @@ admin.site.register(Question, QuestionAdmin)
 # admin.site.register(QuestionBank, QuestionBankAdmin)
 
 admin.site.register(Exam, ExamAdmin)
-admin.site.register(Result) 
+admin.site.register(Response) 

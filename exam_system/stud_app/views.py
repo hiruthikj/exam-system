@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 
 from .models import *
+from .forms import *
 
 # @login_required(login_url=reverse('stud_app:login'))       circular call
 # @login_required(login_url='/students/login')
@@ -88,28 +89,28 @@ def exam_list_view(request, username):
 
 
 def exam_view(request, username, exam_id):
+    student = get_object_or_404(Student, user__username = username)
+    exam = Exam.objects.get(id=exam_id)
+
+    ChoiceFormSet = forms.formset_factory(ChoiceForm, extra=0)
+                                
+    choices_list = Choice.objects.all()
+    choices_data = [
+        {'choice_text': c.choice_text, 'question': c.question, 'is_selected': c.is_selected} 
+            for c in choices_list
+    ]
+
     if request.method == 'POST':
-        pass
+        choice_formset = ChoiceFormSet(request.POST)
+        if choice_formset.is_valid():
+            return HttpResponse('Choice formset validated!')
+
     else:
-        student = get_object_or_404(Student, user__username = username)
-        # courses = student.course_fk.all()
-        exam = Exam.objects.get(id=exam_id)
-        # questions = 
+        choice_formset = ChoiceFormSet(initial=choices_data)
 
         context = { 
-                'username': username,
+                # 'username': username,
                 'exam': exam,
-            } 
+                'choice_formset': choice_formset,
+        }
         return render(request, 'stud_app/exam.html', context)
-
-
-# class StudentView(FormView):
-#     template_name = 'stud_app/login.html'
-#     form_class = StudentForm
-#     success_url = 'home/'
-
-    # def form_valid(self, form):
-    #     # This method is called when valid form data has been POSTed.
-    #     # It should return an HttpResponse.
-    #     form.send_email()
-    #     return super().form_valid(form)

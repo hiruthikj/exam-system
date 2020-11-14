@@ -65,11 +65,6 @@ class Student(models.Model):
 # def save_user_profile(sender, instance, **kwargs):
 #     instance.profile.save()
 
-# class QuestionBank(models.Model):
-#     question_fk = models.ForeignKey('Course', Course, on_delete=models.CASCADE)
-#     def __str__(self):
-#         return self.course_fk.course_code
-
 class Exam(models.Model):
     exam_name = models.CharField(max_length=40)
     course_fk = models.ForeignKey(Course, verbose_name='Course', on_delete=models.CASCADE, null=True, blank=True)
@@ -101,13 +96,12 @@ class QuestionTag(models.Model):
 class Question(models.Model):
     qn_text = models.TextField('Question Description',max_length=200)
     qn_image = models.ImageField('Question Image', null=True, blank=True)
-    qn_tag = models.ForeignKey(QuestionTag, verbose_name='Tag', on_delete=models.CASCADE, null=True, blank=True)
+    qn_tag = models.ForeignKey('QuestionTag', verbose_name='Tag', on_delete=models.CASCADE, null=True, blank=True)
     exams = models.ManyToManyField('Exam')
     course_fk = models.ForeignKey(Course, verbose_name='Course', on_delete=models.CASCADE, null=True, blank=True)
     pub_date = models.DateTimeField('date published', auto_now_add=True, editable=False)
     # qn_image = ImageWithThumbsField('Question Image', upload_to='img/', sizes=((125,125),(300,200)))
     # correct_choice = models.ForeignKey(Choice)
-    # qn_bank = models.ForeignKey(QuestionBank, on_delete=models.CASCADE, verbose_name='IN QNbank')
 
     def __str__(self):
         return self.qn_text[:10]
@@ -139,17 +133,25 @@ class Question(models.Model):
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
+    is_selected = models.BooleanField('Correct Answer', default=False, null=True, blank=True)
     is_correct = models.BooleanField('Correct Answer', default=False)
 
     def __str__(self):
         return self.choice_text
 
-class Result(models.Model):
-    exam_fk = models.ForeignKey(Exam, on_delete=models.CASCADE)
-    student_fk = models.ForeignKey(Student, on_delete=models.CASCADE,null=True,blank=True)
-    # question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice = models.ForeignKey(Question, on_delete=models.CASCADE)
+
+class Attendee(models.Model):
+    exam_fk = models.ForeignKey('Exam', on_delete=models.CASCADE)
+    student_fk = models.ForeignKey('Student', on_delete=models.CASCADE)
+    total_marks = models.FloatField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{exam_fk.exam_name} : {student_fk.get_name()}'
+
+class Response(models.Model):
+    list_fk = models.ForeignKey('Attendee', on_delete=models.CASCADE)
+    # question = models.ForeignKey('Question', on_delete=models.CASCADE)
+    choice = models.ForeignKey('Choice', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.student_fk.user.username
-

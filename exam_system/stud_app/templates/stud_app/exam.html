@@ -1,9 +1,22 @@
-{% for qn in exam.question_set.all %}
-    {{qn.qn_text}}
-    
-    {% for choice in qn.choice_set.all %}
-        {{ choice.choice_text }}
-        {{ choice.is_correct }}
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
     {% endfor %}
-{% endfor %}
-        
+{% endif %}
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ choice_formset.management_form }}
+
+    {% for choice_form in choice_formset %}
+        {{ choice_form.as_p }}
+    {% endfor %}
+
+    {% if choice_formset.non_form_errors %}
+        {% for error in choice_formset.non_form_errors %}
+            {{ error|escape }}
+        {% endfor %}
+    {% endif %}
+
+    <input type="submit" value="Submit" class="button"/>
+</form>

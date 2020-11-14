@@ -24,13 +24,12 @@ class StudentLoginForm(AuthenticationForm):
         }
     ))
 
-class tryingForm(forms.Form):
-    name = forms.CharField(max_length=5)
-    pwd = forms.PasswordInput()
-    num = forms.IntegerField()
+class ChoiceForm(forms.ModelForm):
+    class Meta:
+        model = Choice
+        exclude = ('is_correct',)
 
-
-# class QuestionForm(forms.ModelForm):
+# class ChoiceForm(forms.ModelForm):
 #     class Meta:
-#         model = Question
-#         fields = 
+#         model = Choice
+#         fields = ['choice_text',]
