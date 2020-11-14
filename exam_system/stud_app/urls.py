@@ -19,5 +19,6 @@ urlpatterns = [
     path('<username>/courses/', views.courses_view, name="courses"),
     path('<username>/exams/', views.exam_list_view, name="exams"),
     path('<username>/exams/<int:exam_id>', views.exam_view, name="exams"),
+    path('<username>/scores/', views.scores_view, name="scores"),
 
 ]

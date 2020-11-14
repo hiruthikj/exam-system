@@ -79,11 +79,12 @@ def exam_list_view(request, username):
     else:
         student = get_object_or_404(Student, user__username = username)
         courses = student.course_fk.all()
-        exams = Exam.objects.filter(course_fk__in=courses)
+        exams = Exam.objects.filter(Q(course_fk__in=courses))
+        unattended_exams = Exam.objects.filter(~Q(attendee__exam_fk__in=exams))
 
         context = { 
                 'username': username,
-                'exams': exams,
+                'exams': unattended_exams,
             } 
         return render(request, 'stud_app/exam_list.html', context)
 
@@ -110,10 +111,11 @@ def exam_view(request, username, exam_id):
             if marked_correct:
                 total_marks += exam.qn_mark
             else:
-                total_marks -= exam.neg_mark
+                if selected:
+                    total_marks -= exam.neg_mark
         
         attendee = Attendee.objects.create(exam_fk=exam, student_fk=student, total_marks=total_marks)
-        return HttpResponse(f'Attendee  got {total_marks} having selected {selected} {exam.qn_mark}  {exam.neg_mark}')
+        return HttpResponseRedirect(reverse('stud_app:scores', args=[username,]))
 
     else:
 
@@ -124,3 +126,19 @@ def exam_view(request, username, exam_id):
                 'questions': questions,
         }
         return render(request, 'stud_app/exam.html', context)
+        
+
+def scores_view(request, username):
+    if request.method == 'POST':
+        pass
+
+    else:
+        student = get_object_or_404(Student, user__username = username)
+        # courses = student.course_fk.all()
+        exams_attended = Attendee.objects.filter(student_fk=student)
+
+        context = { 
+                'username': username,
+                'exams_attended': exams_attended,
+            } 
+        return render(request, 'stud_app/scores.html', context)

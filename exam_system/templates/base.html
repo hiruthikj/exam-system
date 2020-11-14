@@ -43,7 +43,7 @@ background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(147,
     {% block nav %}
     <nav class="navbar navbar-expand-lg navbar-extend-sm bg-primary navbar-dark" id="MyNav">
         <div class="container">
-            <a class="navbar-brand" id="univLogo" href="#"><span class="fas fa-university"> Online Exam System</a>
+            <a class="navbar-brand" id="univLogo" href="{% url 'stud_app:home' username %}"><span class="fas fa-university"> Online Exam System</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#Navbar">
             <span class="navbar-toggler-icon"></span>
             </button>
@@ -52,7 +52,7 @@ background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(147,
                 <a class="nav-item nav-link" href="{% url 'stud_app:home' username %}"><span class="fas fa-user-graduate"></span> My Details</a>
                 <a class="nav-item nav-link" href="{% url 'stud_app:courses' username %}"><span class="fas fa-book-open"></span> Courses</a>
                 <a class="nav-item nav-link" href="{% url 'stud_app:exams' username %}"><span class="fas fa-edit"></span> Exams</a>
-                <a class="nav-item nav-link" href="#"><span class="fas fa-file-alt"></span> Scores</a>
+                <a class="nav-item nav-link" href="{% url 'stud_app:scores' username %}"><span class="fas fa-file-alt"></span> Scores</a>
                 </div>
 
                 <div class="navbar-nav ml-auto">
@@ -73,6 +73,9 @@ background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(147,
     {% block content %}
     {% endblock %}
 
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
     </body>
 </html>

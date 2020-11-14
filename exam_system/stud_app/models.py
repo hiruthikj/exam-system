@@ -72,9 +72,10 @@ class Exam(models.Model):
 
     qn_mark = models.IntegerField(default=4, null=True, blank=True)
     neg_mark = models.IntegerField(default=1, null=True, blank=True)
+    time_limit = models.DurationField(help_text='In what UNITS???') #widget=TimeDurationWidget(), required=False, 
 
     is_active = models.BooleanField(default=True)
-    time_limit = models.DurationField(help_text='In what UNITS???') #widget=TimeDurationWidget(), required=False, 
+
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     pub_date = models.DateTimeField('Date Published', auto_now_add=True, editable=False)
@@ -107,7 +108,7 @@ class Question(models.Model):
     # correct_choice = models.ForeignKey(Choice)
 
     def __str__(self):
-        return self.qn_text[:20]
+        return self.qn_text[:70]
 
     # def image_tag(self):
     #     from django.utils.html import escape

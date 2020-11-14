@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Exams{% endblock %}
+{% block title %}Scores{% endblock %}
 
 
 {% block head %}
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/3.12.2/less.min.js" integrity="sha512-rCgfeoOQxpi926f8I0zdBVUY9q/2SKXqrdIy23yEPuvWvJ8/jwDqhQ0eJJhS9L8ySZsmbEQp3LCgPTiaAk5WVw==" crossorigin="anonymous"></script> -->
     <link rel="stylesheet" href="{% static 'stud_app/css/exam_list.css' %}">
 {% endblock %}
     
@@ -25,18 +26,17 @@
                     <th>Course</th>
                     <th>Exam</th>
                     <th>Start Time</th>
-                    <th>Time Limit</th>
-                    <th></th>
+                    <th>Scores</th>
+    
                 </tr>
             </thead>
             <tbody>
-                {% for exam in exams %}
+                {% for exam_attended in exams_attended %}
                 <tr>
-                    <td>{{ exam.course_fk.course_name }}</td>
-                    <td>{{ exam.exam_name }}</td>
-                    <td>{{ exam.start_time }}</td>
-                    <td>{{ exam.time_limit }}</td>
-                    <td><button type="submit" name="{{ exam.id }}" class="btn btn-lg btn-primary btn-block btn-signin" value="{{ exam.id}}">Enter</button></td>
+                    <td>{{ exam_attended.exam_fk.course_fk.course_name }}</td>
+                    <td>{{ exam_attended.exam_fk.exam_name }}</td>
+                    <td>{{ exam_attended.exam_fk.start_time }}</td>
+                    <td>{{ exam_attended.total_marks }}</td>
 
                 </tr>
                 {% endfor %}

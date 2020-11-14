@@ -5,64 +5,7 @@
 
 
 {% block head %}
-<style>
-
-/* Prevent image stretching is it's resized */
-.card-img-top {
-    object-fit: cover;
-}
-
-/* Make all cards in row the same height */
-.row {
-   display: flex;
-   flex-wrap: wrap;
-}
-
-.row > div[class*='col-'] {
-  display: flex;
-}
-
-/* Hover effects */
-.card {
-  transition: -webkit-transform 0.3s ease;
-}
-.card:hover {
-  transform: scale(1.01, 1.01);
-}
-
-/* Responsive design for image heights */
-/* @media (min-width: 576px) { 
-  .card-img-top {
-    height: 50vw;
-  }
-}
-
-@media (min-width: 768px) { 
-  .card-img-top {
-    height: 30vw;
-  }
-} */
-
-@media (min-width: 992px) { 
-  .card-img-top {
-    height: 20vw;
-  }
-}
-
-@media (min-width: 1200px) { 
-  .card-img-top {
-    height: 20vw;
-  }
-}
-
-card{
-    clear: both;
-}
-
-
-
-</style>
-    
+    <link rel="stylesheet" href="{% static 'css/exam.css' %}">    
 {% endblock %}
     
     
@@ -70,7 +13,7 @@ card{
 
 <div class="container">
     <div class="row">
-    <div class="col-6 offset-4">
+    <div class="col-6 offset-3">
 
   <div class="card text-white bg-info mb-3">
     <div class="card-header"><h4 style="text-align: center;">{{ exam.exam_name }}</h4>
@@ -97,9 +40,14 @@ card{
         
     <div class="row">
         <!-- the cols in this div change the number of cards per row depending on screen size and the mb-4 adds space below cards if they spill over into the next row-->
-        <div class="col-8 offset-2">
+        <div class="col-8 offset-2   myqn">
             <div class="card">
-                <img class="card-img-top" src="https://res.cloudinary.com/sepuckett86/image/upload/v1513176680/IMG_5837_xicdt5.jpg" alt="Card image cap">
+                
+                {% if qn.qn_image %}
+                <img class="card-img-top" src="{{ qn.qn_image.url }}" alt="Card image cap">
+                {% endif %}
+                    
+                
                 <div class="card-body">
                 <p class="card-text">{{ forloop.counter }}) {{ qn.qn_text }}</p>
 
@@ -120,15 +68,35 @@ card{
             </div>
         </div>
     </div>
-
-
-        
-        
-
     {% endfor %}
 
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter" 
+        id="mysubmit" style="display: block; margin:20px auto; margin-bottom: 20px;">Submit</button>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">Confirm Submission</h5>
+            <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            Remaining Time: 
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+        </div>
+        </div>
+    </div>
 
-    <input type="submit" class="btn btn-success" class="button">
+    <!-- <input type="submit" class="btn btn-success" class="button"> -->
+    
 </form>
 
 </div>
