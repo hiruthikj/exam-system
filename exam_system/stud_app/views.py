@@ -92,25 +92,31 @@ def exam_view(request, username, exam_id):
     student = get_object_or_404(Student, user__username = username)
     exam = Exam.objects.get(id=exam_id)
 
-    ChoiceFormSet = forms.formset_factory(ChoiceForm, extra=0)
+    Attendee.objects.create(exam_fk=exam, student_fk=student)
+    
+
+    ResponseFormSet = forms.formset_factory(ResponseForm, extra=0)
                                 
     choices_list = Choice.objects.all()
-    choices_data = [
-        {'choice_text': c.choice_text, 'question': c.question, 'is_selected': c.is_selected} 
-            for c in choices_list
-    ]
+    questions = exam.question_set.all()
+    # choices_data = [
+    #     {'choice_text': c.choice_text, 'question': c.question, 'is_selected': c.is_selected} 
+    #         for c in choices_list
+    # ]
+
 
     if request.method == 'POST':
-        choice_formset = ChoiceFormSet(request.POST)
-        if choice_formset.is_valid():
+        response_formset = ResponseFormSet(request.POST)
+        if response_formset.is_valid():
             return HttpResponse('Choice formset validated!')
 
     else:
-        choice_formset = ChoiceFormSet(initial=choices_data)
+        response_formset = ResponseFormSet()
 
-        context = { 
+        context = {
                 # 'username': username,
                 'exam': exam,
-                'choice_formset': choice_formset,
+                'response_formset': response_formset,
+                'questions': questions,
         }
         return render(request, 'stud_app/exam.html', context)

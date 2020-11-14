@@ -149,8 +149,8 @@ class Attendee(models.Model):
         return f'{exam_fk.exam_name} : {student_fk.get_name()}'
 
 class Response(models.Model):
-    list_fk = models.ForeignKey('Attendee', on_delete=models.CASCADE)
-    # question = models.ForeignKey('Question', on_delete=models.CASCADE)
+    attendee_fk = models.ForeignKey('Attendee', on_delete=models.CASCADE)
+    question = models.ForeignKey('Question', on_delete=models.CASCADE)
     choice = models.ForeignKey('Choice', on_delete=models.CASCADE)
 
     def __str__(self):

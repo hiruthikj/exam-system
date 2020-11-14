@@ -29,6 +29,11 @@ class ChoiceForm(forms.ModelForm):
         model = Choice
         exclude = ('is_correct',)
 
+class ResponseForm(forms.ModelForm):
+    class Meta:
+        model = Response
+        fields = ('choice',)
+
 # class ChoiceForm(forms.ModelForm):
 #     class Meta:
 #         model = Choice
