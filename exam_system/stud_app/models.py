@@ -70,6 +70,9 @@ class Exam(models.Model):
     course_fk = models.ForeignKey(Course, verbose_name='Course', on_delete=models.CASCADE, null=True, blank=True)
     # question_fk = models.ManyToManyField('Question')
 
+    qn_mark = models.IntegerField(default=4, null=True, blank=True)
+    neg_mark = models.IntegerField(default=1, null=True, blank=True)
+
     is_active = models.BooleanField(default=True)
     time_limit = models.DurationField(help_text='In what UNITS???') #widget=TimeDurationWidget(), required=False, 
     created_on = models.DateTimeField(auto_now_add=True)
@@ -104,7 +107,7 @@ class Question(models.Model):
     # correct_choice = models.ForeignKey(Choice)
 
     def __str__(self):
-        return self.qn_text[:10]
+        return self.qn_text[:20]
 
     # def image_tag(self):
     #     from django.utils.html import escape
@@ -141,16 +144,16 @@ class Choice(models.Model):
 
 
 class Attendee(models.Model):
-    exam_fk = models.ForeignKey('Exam', on_delete=models.CASCADE)
-    student_fk = models.ForeignKey('Student', on_delete=models.CASCADE)
+    exam_fk = models.ForeignKey(Exam, on_delete=models.CASCADE)
+    student_fk = models.ForeignKey(Student, on_delete=models.CASCADE)
     total_marks = models.FloatField(null=True, blank=True)
 
     def __str__(self):
-        return f'{exam_fk.exam_name} : {student_fk.get_name()}'
+        return f'{self.exam_fk.exam_name} : {self.student_fk.get_name()}'
 
 class Response(models.Model):
     attendee_fk = models.ForeignKey('Attendee', on_delete=models.CASCADE)
-    question = models.ForeignKey('Question', on_delete=models.CASCADE)
+    # question = models.ForeignKey('Question', on_delete=models.CASCADE)
     choice = models.ForeignKey('Choice', on_delete=models.CASCADE)
 
     def __str__(self):

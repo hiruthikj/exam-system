@@ -1,41 +1,140 @@
-{% if messages %}
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} {{ exam.exam_name }} {% endblock %}
+
+
+{% block head %}
+<style>
+
+/* Prevent image stretching is it's resized */
+.card-img-top {
+    object-fit: cover;
+}
+
+/* Make all cards in row the same height */
+.row {
+   display: flex;
+   flex-wrap: wrap;
+}
+
+.row > div[class*='col-'] {
+  display: flex;
+}
+
+/* Hover effects */
+.card {
+  transition: -webkit-transform 0.3s ease;
+}
+.card:hover {
+  transform: scale(1.01, 1.01);
+}
+
+/* Responsive design for image heights */
+/* @media (min-width: 576px) { 
+  .card-img-top {
+    height: 50vw;
+  }
+}
+
+@media (min-width: 768px) { 
+  .card-img-top {
+    height: 30vw;
+  }
+} */
+
+@media (min-width: 992px) { 
+  .card-img-top {
+    height: 20vw;
+  }
+}
+
+@media (min-width: 1200px) { 
+  .card-img-top {
+    height: 20vw;
+  }
+}
+
+card{
+    clear: both;
+}
+
+
+
+</style>
+    
+{% endblock %}
+    
+    
+{% block content %}
+
+<div class="container">
+    <div class="row">
+    <div class="col-6 offset-4">
+
+  <div class="card text-white bg-info mb-3">
+    <div class="card-header"><h4 style="text-align: center;">{{ exam.exam_name }}</h4>
+    <h5 class="card-title" style="text-align: center;">{{ exam.course_fk.course_name }}</h5>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-primary" role="alert">
+            Each question has {{ exam.qn_mark }} mark{{ exam.qn_mark|pluralize }}
+          </div>
+
+      <div class="alert alert-warning" role="alert">
+        Incorrect answers has negative mark of {{ exam.neg_mark }} mark{{ exam.neg_mark|pluralize }}      </div>
+    </div>
+  </div>
+</div>
+</div>
+
 
 <form action="" method="post">
     {% csrf_token %}
-    {{ response_formset.management_form }}
 
-    {% for response_form in response_formset %}
-        <table>
-            {% for field in form %}
-                <tr>
-                    <td>{{ field.label_tag }}</td>
-                    <td>
-                        {{ field.errors }}
-                        {{ field }}                            
-                    </td>
-                    <td>
-                        {% if field.help_text %}
-                        {{ field.help_text }}
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-                <tr>
-                    <td></td>
-                    <!-- <td><input type="submit" value="Submit"></td> -->
-                </tr>
-        </table>
+
+    {% for qn in questions %}
+        
+    <div class="row">
+        <!-- the cols in this div change the number of cards per row depending on screen size and the mb-4 adds space below cards if they spill over into the next row-->
+        <div class="col-8 offset-2">
+            <div class="card">
+                <img class="card-img-top" src="https://res.cloudinary.com/sepuckett86/image/upload/v1513176680/IMG_5837_xicdt5.jpg" alt="Card image cap">
+                <div class="card-body">
+                <p class="card-text">{{ forloop.counter }}) {{ qn.qn_text }}</p>
+
+                {% for choice in qn.choice_set.all %}
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <input type="checkbox" name="{{qn.id}}" value="{{ choice.id }}"  id="{{qn.id}} {{choice.id}}">
+                      </div>
+                      <!-- <input type="text" class="form-control" aria-label="Text input with checkbox"> -->
+                      <label for="{{qn.id}} {{choice.id}}" style="margin-left: 5px;">{{ choice }}</label><br>
+                    </div>
+                    
+                </div> 
+                {% endfor %}
+                
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        
+        
+
     {% endfor %}
 
-    {% if response_formset.non_form_errors %}
-        {% for error in response_formset.non_form_errors %}
-            {{ error|escape }}
-        {% endfor %}
-    {% endif %}
 
-    <input type="submit" value="Submit" class="button">
+    <input type="submit" class="btn btn-success" class="button">
 </form>
+
+</div>
+
+{% endblock content %}
+
+
+
+
