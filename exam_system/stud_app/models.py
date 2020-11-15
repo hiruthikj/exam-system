@@ -68,12 +68,12 @@ class Student(models.Model):
 #     instance.profile.save()
 
 class Exam(models.Model):
-    exam_name = models.CharField(max_length=40)
+    exam_name = models.CharField(max_length=40, unique=True)
     course_fk = models.ForeignKey(Course, verbose_name='Course', on_delete=models.CASCADE, null=True, blank=True)
     # question_fk = models.ManyToManyField('Question')
 
-    qn_mark = models.IntegerField(default=4, null=True, blank=True)
-    neg_mark = models.IntegerField(default=1, null=True, blank=True)
+    qn_mark = models.FloatField(default=4, null=True, blank=True)
+    neg_mark = models.FloatField(default=1, null=True, blank=True)
 
     start_time = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)

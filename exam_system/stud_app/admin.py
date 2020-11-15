@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from .models import * 
+from django import forms
 
 # import nested_admin
 
@@ -103,11 +104,35 @@ class QuestionAdmin(admin.ModelAdmin):
     
 #     search_fields = ['qn_text']
 
+class ExamForm(forms.ModelForm):
+    class Meta:
+        model = Exam
+        fields = '__all__'
 
+    def clean_qn_mark(self):
+        self.cleaned_data['qn_mark'] =  int(self.cleaned_data.get('qn_mark'))
+        if self.cleaned_data.get('qn_mark') <= 0:
+            raise forms.ValidationError("Enter valid marks for right answer!")
+        return self.cleaned_data['qn_mark']
+
+    def clean_neg_mark(self):
+        self.cleaned_data['neg_mark'] =  int(self.cleaned_data.get('neg_mark'))
+        if self.cleaned_data.get('neg_mark') <= 0:
+            raise forms.ValidationError("Enter valid marks for wrong answer!")
+        return self.cleaned_data['neg_mark']
+
+    def clean(self):
+        start_time = self.cleaned_data.get('start_time')
+        end_time = self.cleaned_data.get('end_time')
+        if start_time and end_time and start_time > end_time:
+            raise forms.ValidationError("Dates are incorrect!")
+        return self.cleaned_data
 
 class ExamAdmin(admin.ModelAdmin):
+    form = ExamForm
     fieldsets = [
         ('Exam Info',                 {'fields': ['exam_name', 'course_fk','is_active']}),
+        ('Mark Scheme',                 {'fields': ['qn_mark', 'neg_mark']}),
         ('Other Info',               {'fields': ['start_time','end_time','time_limit',]}),
         ('Stats',                   {'fields': ['created_on','updated_on',]}),
         
