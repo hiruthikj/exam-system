@@ -6,7 +6,7 @@ from django.urls import reverse
 
 import datetime
 from django.utils import timezone
-from durationwidget.widgets import TimeDurationWidget
+# from durationwidget.widgets import TimeDurationWidget
 # from django.utils.html import mark_safe
 # from .thumbs import ImageWithThumbsField
 

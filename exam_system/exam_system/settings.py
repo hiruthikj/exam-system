@@ -27,9 +27,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # third-party apps
-    'django_extensions',
-    'nested_admin',
-    'durationwidget',
+    # 'django_extensions',
+    # 'nested_admin',
+    # 'durationwidget',
     # local apps
     'stud_app.apps.StudAppConfig',
 ]

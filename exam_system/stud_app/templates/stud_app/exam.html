@@ -20,7 +20,13 @@
         var countdownTimer = setInterval(() => {
         timeleft--;
 
-        document.getElementById(bar).value = timeleft;
+        percent = timeleft / {{ time_in_sec }} * 100;
+        $(".progress-bar").css("width", percent + "%")
+
+        if (timeleft == 30)
+        {
+            $('.progress-bar').addClass('bg-danger').removeClass('bg-success');
+        }
 
         var date = new Date(0);
         date.setSeconds(timeleft); // specify value for SECONDS here
@@ -60,8 +66,11 @@
         
 
         <div class="alert alert-danger" role="alert">
-            <p>Time Remaining: <span id="pageBeginCountdownText">{{ time_in_sec }} seconds</span></p>    
-            <progress value="{{ time_in_sec }}" max="{{ time_in_sec }}" id="pageBeginCountdown"></progress>
+            <p>Time Remaining: <span id="pageBeginCountdownText">{{ time_in_sec }} seconds</span></p>
+            <div class="progress">
+                <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" role="progressbar" style="width: 100%" aria-valuenow="{{ time_in_sec }}" aria-valuemin="0" aria-valuemax="{{ time_in_sec }}"></div>
+            </div>    
+            <!-- <progress value="{{ time_in_sec }}" max="{{ time_in_sec }}" id="pageBeginCountdown"></progress> -->
         </div>
      
     </div>

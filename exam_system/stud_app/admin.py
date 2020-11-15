@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from .models import * 
 
-import nested_admin
+# import nested_admin
 
 
 # class DepartmentInline(admin.TabularInline):
