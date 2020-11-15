@@ -8,6 +8,9 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
 
+import datetime
+from django.utils import timezone
+
 # @login_required(login_url=reverse('stud_app:login'))       circular call
 # @login_required(login_url='/students/login')
 def home_view(request, username):
@@ -85,11 +88,16 @@ def exam_list_view(request, username):
         student = get_object_or_404(Student, user__username = username)
         courses = student.course_fk.all()
         exams = Exam.objects.filter(Q(course_fk__in=courses))
-        unattended_exams = Exam.objects.filter(~Q(attendee__exam_fk__in=exams))
+        unattended_exams = Exam.objects.filter(
+            ~Q(attendee__exam_fk__in=exams),
+            Q(is_active=True)
+            
+        )
 
         context = { 
                 'username': username,
                 'exams': unattended_exams,
+                'now': timezone.now()
             } 
         return render(request, 'stud_app/exam_list.html', context)
 

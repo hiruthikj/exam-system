@@ -7,15 +7,16 @@
 {% block head %}
     <link rel="stylesheet" href="{% static 'stud_app/css/exam.css' %}">
     <link rel="stylesheet" href="{% static 'stud_app/css/progressbar.css' %}">
+    <script src="{% static 'stud_app/js/exam.js' %}"></script>
 {% endblock %}
     
     
 {% block content %}
 
 <script>
-    ProgressCountdown({{ time_in_sec }}, 'pageBeginCountdown', 'pageBeginCountdownText').then(value => alert(`Time over, autosubmitted`));
+    ProgressCountdown({{ time_in_sec }}, 'pageBeginCountdown', 'pageBeginCountdownText','pageBeginCountdownText2').then(value => alert(`Time over, autosubmitted`));
 
-    function ProgressCountdown(timeleft, bar, text) {
+    function ProgressCountdown(timeleft, bar, text, text2) {
     return new Promise((resolve, reject) => {
         var countdownTimer = setInterval(() => {
         timeleft--;
@@ -33,6 +34,7 @@
         var timeString = date.toISOString().substr(11, 8);
 
         document.getElementById(text).textContent = timeString;
+        document.getElementById(text2).textContent = timeString;
 
         if (timeleft <= 0) {
             clearInterval(countdownTimer);
@@ -66,7 +68,7 @@
         
 
         <div class="alert alert-danger" role="alert">
-            <p>Time Remaining: <span id="pageBeginCountdownText">{{ time_in_sec }} seconds</span></p>
+            <p>Remaining Time: <span id="pageBeginCountdownText">{{ time_in_sec }} seconds</span></p>
             <div class="progress">
                 <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" role="progressbar" style="width: 100%" aria-valuenow="{{ time_in_sec }}" aria-valuemin="0" aria-valuemax="{{ time_in_sec }}"></div>
             </div>    
@@ -135,11 +137,11 @@
             </button>
             </div>
             <div class="modal-body">
-            Remaining Time: 
+                <p>Remaining Time: <span id="pageBeginCountdownText2">{{ time_in_sec }} seconds</span></p>
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-success" id="modalsubmit">Submit</button>
+            <button type="submit" class="btn btn-success" id="modalsubmit" onclick="formsubmitted=true">Submit</button>
             </div>
         </div>
         </div>

@@ -36,8 +36,8 @@ class Student(models.Model):
 
     year_joined = models.DateField(null=True, blank=True)
 
-    # def __str__(self):
-    #     return f"{self.first_name} {self.last_name}"
+    def __str__(self):
+        return f"{self.user.username}"
 
     def get_name(self):
         return f'{self.user.first_name} {self.user.last_name}'
@@ -76,7 +76,8 @@ class Exam(models.Model):
     neg_mark = models.IntegerField(default=1, null=True, blank=True)
 
     start_time = models.DateTimeField(null=True, blank=True)
-    time_limit = models.DurationField(help_text='In what UNITS???') #widget=TimeDurationWidget(), required=False, 
+    end_time = models.DateTimeField(null=True, blank=True)
+    time_limit = models.DurationField(help_text='HH:MM:SS format') #widget=TimeDurationWidget(), required=False, 
 
     is_active = models.BooleanField(default=True)
 
@@ -98,16 +99,16 @@ class Exam(models.Model):
     class Meta:
         ordering = ['start_time',]
 
-class QuestionTag(models.Model):
-    tag_name = models.TextField(max_length=20, unique=True)
+# class QuestionTag(models.Model):
+#     tag_name = models.TextField(max_length=20, unique=True)
 
-    def __str__(self):
-        return self.tag_name
+#     def __str__(self):
+#         return self.tag_name
 
 class Question(models.Model):
     qn_text = models.TextField('Question Description',max_length=200)
     qn_image = models.ImageField('Question Image', null=True, blank=True)
-    qn_tag = models.ForeignKey('QuestionTag', verbose_name='Tag', on_delete=models.CASCADE, null=True, blank=True)
+    # qn_tag = models.ForeignKey('QuestionTag', verbose_name='Tag', on_delete=models.CASCADE, null=True, blank=True)
     exams = models.ManyToManyField('Exam')
     course_fk = models.ForeignKey(Course, verbose_name='Course', on_delete=models.CASCADE, null=True, blank=True)
     pub_date = models.DateTimeField('date published', auto_now_add=True, editable=False)
@@ -155,6 +156,7 @@ class Attendee(models.Model):
     exam_fk = models.ForeignKey(Exam, on_delete=models.CASCADE)
     student_fk = models.ForeignKey(Student, on_delete=models.CASCADE)
     total_marks = models.FloatField(null=True, blank=True)
+    submitted_on = models.DateTimeField(auto_now_add=True, null=True, blank=True, editable=False)
 
     def __str__(self):
         return f'{self.exam_fk.exam_name} : {self.student_fk.get_name()}'

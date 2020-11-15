@@ -25,6 +25,7 @@
                     <th>Course</th>
                     <th>Exam</th>
                     <th>Start Time</th>
+                    <th>End Time</th>
                     <th>Time Limit</th>
                     <th></th>
                 </tr>
@@ -41,8 +42,21 @@
                             Anytime
                         {% endif %}
                     </td>
+                    <td> 
+                        {% if exam.end_time %}
+                            {{ exam.end_time }}
+                        {% else %}
+                            Anytime
+                        {% endif %}
+                    </td>
                     <td>{{ exam.time_limit }}</td>
-                    <td><button type="submit" name="{{ exam.id }}" class="btn btn-lg btn-primary btn-block btn-signin" value="{{ exam.id}}">Enter</button></td>
+                    <td>
+                        <button type="submit" name="{{ exam.id }}" class="btn btn-lg btn-primary btn-block btn-signin" 
+                        {% if now < exam.start_time or now > exam.end_time %}
+                            disabled
+                        {% endif %}
+                        value="{{ exam.id}}">Enter</button>
+                    </td>
 
                 </tr>
                 {% endfor %}

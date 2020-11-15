@@ -107,8 +107,8 @@ class QuestionAdmin(admin.ModelAdmin):
 
 class ExamAdmin(admin.ModelAdmin):
     fieldsets = [
-        ('Exam Info',                 {'fields': ['course_fk','exam_name',]}),
-        ('Other Info',               {'fields': ['start_time','time_limit',]}),
+        ('Exam Info',                 {'fields': ['exam_name', 'course_fk','is_active']}),
+        ('Other Info',               {'fields': ['start_time','end_time','time_limit',]}),
         ('Stats',                   {'fields': ['created_on','updated_on',]}),
         
     ]

@@ -25,7 +25,7 @@
                 <tr>
                     <th>Course</th>
                     <th>Exam</th>
-                    <th>Start Time</th>
+                    <th>Submitted on</th>
                     <th>Scores</th>
     
                 </tr>
@@ -35,7 +35,7 @@
                 <tr>
                     <td>{{ exam_attended.exam_fk.course_fk.course_name }}</td>
                     <td>{{ exam_attended.exam_fk.exam_name }}</td>
-                    <td>{{ exam_attended.exam_fk.start_time }}</td>
+                    <td>{{ exam_attended.submitted_on }}</td>
                     <td>{{ exam_attended.total_marks }}</td>
 
                 </tr>
