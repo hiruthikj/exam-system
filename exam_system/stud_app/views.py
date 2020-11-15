@@ -129,6 +129,7 @@ def exam_view(request, username, exam_id):
                 'exam': exam,
                 # 'response_formset': response_formset,
                 'questions': questions,
+                'time_in_sec': int(exam.time_limit.total_seconds())
         }
         return render(request, 'stud_app/exam.html', context)
         

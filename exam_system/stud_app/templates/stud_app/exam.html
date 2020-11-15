@@ -5,17 +5,47 @@
 
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'css/exam.css' %}">    
+    <link rel="stylesheet" href="{% static 'stud_app/css/exam.css' %}">
+    <link rel="stylesheet" href="{% static 'stud_app/css/progressbar.css' %}">
 {% endblock %}
     
     
 {% block content %}
 
-<div class="container">
-    <div class="row">
-    <div class="col-6 offset-3">
+<script>
+    ProgressCountdown({{ time_in_sec }}, 'pageBeginCountdown', 'pageBeginCountdownText').then(value => alert(`Time over, autosubmitted`));
 
-  <div class="card text-white bg-info mb-3">
+    function ProgressCountdown(timeleft, bar, text) {
+    return new Promise((resolve, reject) => {
+        var countdownTimer = setInterval(() => {
+        timeleft--;
+
+        document.getElementById(bar).value = timeleft;
+
+        var date = new Date(0);
+        date.setSeconds(timeleft); // specify value for SECONDS here
+        var timeString = date.toISOString().substr(11, 8);
+
+        document.getElementById(text).textContent = timeString;
+
+        if (timeleft <= 0) {
+            clearInterval(countdownTimer);
+            $( "#mysubmit" ).click();
+            $( "#modalsubmit" ).click();
+            resolve(true);
+        }
+        }, 1000);
+    });
+    }
+
+</script>
+
+<div class="container">
+
+<div class="row">
+<div class="col-6 offset-3">
+
+  <div class="card text-white bg-info mb-3 examcard">
     <div class="card-header"><h4 style="text-align: center;">{{ exam.exam_name }}</h4>
     <h5 class="card-title" style="text-align: center;">{{ exam.course_fk.course_name }}</h5>
     </div>
@@ -25,7 +55,18 @@
           </div>
 
       <div class="alert alert-warning" role="alert">
-        Incorrect answers has negative mark of {{ exam.neg_mark }} mark{{ exam.neg_mark|pluralize }}      </div>
+        Incorrect answers has negative mark of {{ exam.neg_mark }} mark{{ exam.neg_mark|pluralize }}      
+        </div>
+        
+
+        <div class="alert alert-danger" role="alert">
+            <p>Time Remaining: <span id="pageBeginCountdownText">{{ time_in_sec }} seconds</span></p>    
+            <progress value="{{ time_in_sec }}" max="{{ time_in_sec }}" id="pageBeginCountdown"></progress>
+        </div>
+     
+    </div>
+
+
     </div>
   </div>
 </div>
@@ -40,8 +81,8 @@
         
     <div class="row">
         <!-- the cols in this div change the number of cards per row depending on screen size and the mb-4 adds space below cards if they spill over into the next row-->
-        <div class="col-8 offset-2   myqn">
-            <div class="card">
+        <div class="col-8 offset-2">
+            <div class="card myqn">
                 
                 {% if qn.qn_image %}
                 <img class="card-img-top" src="{{ qn.qn_image.url }}" alt="Card image cap">
@@ -89,7 +130,7 @@
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="submit" class="btn btn-success" id="modalsubmit">Submit</button>
             </div>
         </div>
         </div>

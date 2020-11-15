@@ -159,6 +159,9 @@ class Attendee(models.Model):
     def __str__(self):
         return f'{self.exam_fk.exam_name} : {self.student_fk.get_name()}'
 
+    def recent(self):
+        return self.exams_fk.start_time
+
 class Response(models.Model):
     attendee_fk = models.ForeignKey('Attendee', on_delete=models.CASCADE)
     # question = models.ForeignKey('Question', on_delete=models.CASCADE)

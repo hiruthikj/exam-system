@@ -48,7 +48,6 @@
 
 card{
     clear: both;
-    
 }
 
 #mysubmit{
@@ -57,7 +56,14 @@ card{
     margin-bottom: 2%;
 }
 
-/* myqn{
+.myqn{
     width: 100%;
-} */
+}
 
+.examcard{
+  margin-top: 20px;
+}
+
+.timeremaining{
+  text-align: center;
+}
