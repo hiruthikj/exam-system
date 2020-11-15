@@ -14,7 +14,7 @@
 <div class="container">
     <div class="card card-container form-group">
         <p id="profile-name" class="profile-name-card"><img src="{% static 'stud_app/img/university.svg' %}" alt="university logo"></p>
-        <h1 id="#pageTitle">ONLINE EXAM SYSTEM</h1>
+        <h1 id="pageTitle">ONLINE EXAM SYSTEM</h1>
 
         <form action="{% url 'stud_app:login' %}" method="post" class="form-signin">
             {% csrf_token %}

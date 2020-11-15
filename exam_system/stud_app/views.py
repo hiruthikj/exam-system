@@ -11,8 +11,13 @@ from .forms import *
 # @login_required(login_url=reverse('stud_app:login'))       circular call
 # @login_required(login_url='/students/login')
 def home_view(request, username):
+    student = Student.objects.get(user__username = username)
+
     return render(request, 'stud_app/home.html', context={
-        'username' : username,
+        'username': username,
+        'student' : student,
+        'name': student.get_name(),
+        
     })
 
 

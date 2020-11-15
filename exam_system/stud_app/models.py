@@ -32,13 +32,15 @@ class Student(models.Model):
     course_fk = models.ManyToManyField(Course)  
     dept_fk = models.ForeignKey('Department', on_delete=models.CASCADE, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    phone_no = models.CharField(max_length=10, null=True, blank=True, unique=True, help_text='10-digit phone number') 
+    phone_no = models.CharField(max_length=10, null=True, blank=True, unique=True, help_text='10-digit phone number')
+
+    year_joined = models.DateField(null=True, blank=True)
 
     # def __str__(self):
     #     return f"{self.first_name} {self.last_name}"
 
     def get_name(self):
-        return (self.user.first_name, self.user.last_name)
+        return f'{self.user.first_name} {self.user.last_name}'
     
     def get_username(self):
         return self.user.username
@@ -72,6 +74,8 @@ class Exam(models.Model):
 
     qn_mark = models.IntegerField(default=4, null=True, blank=True)
     neg_mark = models.IntegerField(default=1, null=True, blank=True)
+
+    start_time = models.DateTimeField(null=True, blank=True)
     time_limit = models.DurationField(help_text='In what UNITS???') #widget=TimeDurationWidget(), required=False, 
 
     is_active = models.BooleanField(default=True)
@@ -90,6 +94,9 @@ class Exam(models.Model):
 
     def __str__(self):
         return self.exam_name
+
+    class Meta:
+        ordering = ['start_time',]
 
 class QuestionTag(models.Model):
     tag_name = models.TextField(max_length=20, unique=True)

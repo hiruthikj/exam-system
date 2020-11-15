@@ -1,8 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
 
-{% block body %}
-<br>
+{% block title %}LOGIN{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'stud_app/css/login.css' %}">
+<style>
+    .logoutMessage{
+        padding-bottom: 40px;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block nav %}
+{% endblock %}
+
+{% block content %}    
 <div class="container">
-    <h1>You are now logged out</h1>
-    <button><a href="{% url 'stud_app:login' %}">LOGIN AGAIN</a></button>
+    <div class="card card-container form-group">
+        <p id="profile-name" class="profile-name-card"><img src="{% static 'stud_app/img/university.svg' %}" alt="university logo"></p>
+        <!-- <h1 id="#pageTitle">ONLINE EXAM SYSTEM</h1> -->
+
+        <!-- <form action="{% url 'stud_app:login' %}" method="post" class="form-signin">
+            {% csrf_token %}
+
+            <input type="text" name="username" id="inputUserID" class="form-control" placeholder="User ID" required autofocus>
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            password/.,
+            <button type="submit" class="btn btn-lg btn-primary btn-block btn-signin">Sign in</button>
+        </form> -->
+        <h4 class="logoutMessage">You have logged out sucessfully</h4>
+        <a href="{% url 'stud_app:login' %}">
+            <button type="submit" class="btn btn-lg btn-primary btn-block btn-signin">Login Again</button>
+        </a>
+    </div>
 </div>
+
 {% endblock %}

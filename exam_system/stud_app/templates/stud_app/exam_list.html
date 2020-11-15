@@ -34,7 +34,13 @@
                 <tr>
                     <td>{{ exam.course_fk.course_name }}</td>
                     <td>{{ exam.exam_name }}</td>
-                    <td>{{ exam.start_time }}</td>
+                    <td> 
+                        {% if exam.start_time %}
+                            {{ exam.start_time }}
+                        {% else %}
+                            Anytime
+                        {% endif %}
+                    </td>
                     <td>{{ exam.time_limit }}</td>
                     <td><button type="submit" name="{{ exam.id }}" class="btn btn-lg btn-primary btn-block btn-signin" value="{{ exam.id}}">Enter</button></td>
 

@@ -107,14 +107,16 @@ class QuestionAdmin(admin.ModelAdmin):
 
 class ExamAdmin(admin.ModelAdmin):
     fieldsets = [
-        ('Exam Info',               {'fields': ['course_fk','exam_name',]}),
-        ('Other Info',               {'fields': ['time_limit','pub_date',]}),
+        ('Exam Info',                 {'fields': ['course_fk','exam_name',]}),
+        ('Other Info',               {'fields': ['start_time','time_limit',]}),
+        ('Stats',                   {'fields': ['created_on','updated_on',]}),
+        
     ]
     # inlines = [CourseInline]
     # list_display = ['dept_code', 'dept_name']
     search_fields = ['exam_name']
 
-    readonly_fields = ('pub_date',)
+    readonly_fields = ('pub_date','created_on','updated_on',)
 
 class MyUserAdmin(UserAdmin):
     add_fieldsets = (
