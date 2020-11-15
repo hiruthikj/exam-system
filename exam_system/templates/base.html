@@ -31,10 +31,10 @@
             </button>
             <div class="collapse navbar-collapse" id='Navbar'>
                 <div class="navbar-nav">
-                <a class="nav-item nav-link" href="{% url 'stud_app:home' username %}"><span class="fas fa-user-graduate"></span> My Details</a>
-                <a class="nav-item nav-link" href="{% url 'stud_app:courses' username %}"><span class="fas fa-book-open"></span> Courses</a>
-                <a class="nav-item nav-link" href="{% url 'stud_app:exams' username %}"><span class="fas fa-edit"></span> Exams</a>
-                <a class="nav-item nav-link" href="{% url 'stud_app:scores' username %}"><span class="fas fa-file-alt"></span> Scores</a>
+                <a class="nav-item nav-link {% if current_page == 'home' %}active{% endif %}"  href="{% url 'stud_app:home' username %}"><span class="fas fa-user-graduate"></span> My Details</a>
+                <a class="nav-item nav-link {% if current_page == 'courses' %}active{% endif %}" href="{% url 'stud_app:courses' username %}"><span class="fas fa-book-open"></span> Courses</a>
+                <a class="nav-item nav-link {% if current_page == 'exams' %}active{% endif %}" href="{% url 'stud_app:exams' username %}"><span class="fas fa-edit"></span> Exams</a>
+                <a class="nav-item nav-link {% if current_page == 'scores' %}active{% endif %}" href="{% url 'stud_app:scores' username %}"><span class="fas fa-file-alt"></span> Scores</a>
                 </div>
 
                 <div class="navbar-nav ml-auto">

@@ -11,7 +11,7 @@
 	 font-family: 'Open Sans', sans-serif;
 	 width: 100%;
 	 min-height: 100%;
-	 background: #009688;
+	 background: #2A265F;
 	 font-size: 16px;
 	 overflow: hidden;
 } */
@@ -33,6 +33,7 @@
 	 box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
 	 position: relative;
 	 overflow: hidden;
+	 border-radius: 10px;
 }
  .card:after {
 	 content: '';
@@ -81,7 +82,7 @@
 }
  .firstinfo .profileinfo h3 {
 	 font-size: 1.2em;
-	 color: #009688;
+	 color: blueviolet;
 	 font-style: italic;
 }
  .firstinfo .profileinfo p.bio {
@@ -89,6 +90,7 @@
 	 color: #5a5a5a;
 	 line-height: 1.2;
 	 font-style: initial;
+	 color: darkgoldenrod;
 }
  @keyframes animatop {
 	 0% {
@@ -120,5 +122,11 @@
 		 top: -24px;
 		 left: -78px;
 	}
+}
+
+/* custom */
+
+.stud-name{
+	color: crimson;
 }
  

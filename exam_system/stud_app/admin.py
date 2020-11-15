@@ -2,8 +2,10 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from .models import * 
+from .forms import Group, GroupAdminForm
 from django import forms
 
+admin.site.site_header = 'Exam administration'
 # import nested_admin
 
 
@@ -36,17 +38,30 @@ class DepartmentAdmin(admin.ModelAdmin):
     list_filter = ['dept_code']
 
 class StudentAdmin(admin.ModelAdmin):
-
     fieldsets = [
         ('Login Info',         {'fields': ['user',]}),
-        ('Academic Info',      {'fields': ['dept_fk','course_fk']}),
+        ('Academic Info',      {'fields': ['dept_fk','course_fk','joined_on']}),
         ('Personal Info',      {'fields': ['phone_no','birth_date',]}),
     ]
     # inlines = [UserInline]
-    # list_display = ['qn_text', 'pub_date', 'was_published_recently']   #course fk
+    list_display = ['user','dept_fk', 'joined_on']   #course fk
     # list_filter = ['user.username']
     
-    # search_fields = ['user']
+    # search_fields = ['dept_fk']
+    # readonly_fields = ('pub_date',)
+
+class FacultyAdmin(admin.ModelAdmin):
+
+    fieldsets = [
+        ('Login Info',         {'fields': ['user',]}),
+        ('Academic Info',      {'fields': ['dept_fk','course_fk','joined_on',]}),
+        ('Personal Info',      {'fields': ['phone_no']}),
+    ]
+    # inlines = [UserInline]
+    list_display = ['user','dept_fk', 'joined_on']   #course fk
+    # list_filter = ['user.username']
+    
+    # search_fields = ['dept_fk']
     # readonly_fields = ('pub_date',)
 
 
@@ -66,20 +81,36 @@ class CustomUserAdmin(UserAdmin):
     # search_fields = ['username']
     # readonly_fields = ('pub_date',)
     
+class ChoiceForm(forms.ModelForm):
+    class Meta:
+        model = Choice
+        exclude = ['is_selected',]
 
+    # def validate_unique(self):
+    #     #super(Choice, self).validate_unique(exclude=exclude)
+    #     sol_exists = False
+    #     question = self.cleaned_data['question']
+    #     for choice in question.choice_set.all():
+    #         if choice.cleaned_data['is_correct']:
+    #              sol_exists = True
+    #     if not sol_exists:
+    #         raise forms.ValidationError("Enter the correct solution")
+
+    #     return self.cleaned_data
 
 class ChoiceInline(admin.TabularInline):
     extra = 0
     model = Choice
+    form = ChoiceForm
 
 class QuestionAdmin(admin.ModelAdmin):
 
     fieldsets = [
-        ('Course Info',         {'fields': ['course_fk', 'exams']}),
+        ('Exam Info',         {'fields': ['exams']}),
         ('Question Info',       {'fields': ['qn_text','pub_date','qn_image',]}),
     ]
     inlines = [ChoiceInline]
-    # list_display = ['qn_text', 'pub_date', 'was_published_recently']   #course fk
+    list_display = ['qn_text', 'pub_date', 'was_published_recently']   #course fk
     list_filter = ['pub_date']
     
     search_fields = ['qn_text']
@@ -138,7 +169,7 @@ class ExamAdmin(admin.ModelAdmin):
         
     ]
     # inlines = [CourseInline]
-    # list_display = ['dept_code', 'dept_name']
+    list_display = ['exam_name','course_fk', 'is_active']
     search_fields = ['exam_name']
 
     readonly_fields = ('pub_date','created_on','updated_on',)
@@ -157,6 +188,7 @@ class MyUserAdmin(UserAdmin):
 # admin.site.unregister(User)
 # admin.site.register(User, CustomUserAdmin)
 admin.site.register(Student, StudentAdmin)
+admin.site.register(Faculty, FacultyAdmin)
 
 admin.site.register(Department,DepartmentAdmin)
 # admin.site.register(Course,CourseAdmin)
@@ -167,3 +199,16 @@ admin.site.register(Question, QuestionAdmin)
 admin.site.register(Exam, ExamAdmin)
 admin.site.register(Response)
 admin.site.register(Attendee)  
+
+# Unregister the original Group admin.
+admin.site.unregister(Group)
+
+# Create a new Group admin.
+class GroupAdmin(admin.ModelAdmin):
+    # Use our custom form.
+    form = GroupAdminForm
+    # Filter permissions horizontal as well.
+    filter_horizontal = ['permissions']
+
+# Register the new Group ModelAdmin.
+admin.site.register(Group, GroupAdmin)

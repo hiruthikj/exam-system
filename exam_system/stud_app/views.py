@@ -10,6 +10,8 @@ from .forms import *
 
 import datetime
 from django.utils import timezone
+import xlwt
+from django.core.files import File
 
 # @login_required(login_url=reverse('stud_app:login'))       circular call
 # @login_required(login_url='/students/login')
@@ -20,6 +22,7 @@ def home_view(request, username):
         'username': username,
         'student' : student,
         'name': student.get_name(),
+        'current_page': 'home',
         
     })
 
@@ -71,6 +74,7 @@ def courses_view(request, username):
         context = { 
                 'username': username,
                 'courses': courses,
+                'current_page': 'courses',
             } 
         return render(request, 'stud_app/courses.html', context)
 
@@ -91,13 +95,13 @@ def exam_list_view(request, username):
         unattended_exams = Exam.objects.filter(
             ~Q(attendee__exam_fk__in=exams),
             Q(is_active=True)
-            
         )
 
         context = { 
                 'username': username,
                 'exams': unattended_exams,
-                'now': timezone.now()
+                'now': timezone.now(),
+                'current_page': 'exams',
             } 
         return render(request, 'stud_app/exam_list.html', context)
 
@@ -107,11 +111,12 @@ def exam_view(request, username, exam_id):
     exam = Exam.objects.get(id=exam_id)
 
     questions = exam.question_set.all()
-
+    
 
     if request.method == 'POST':
         total_marks = 0
-    
+        attendee = Attendee.objects.create(exam_fk=exam, student_fk=student, total_marks=total_marks)
+
         for qn in questions:
             selected = request.POST.getlist(str(qn.id))
             
@@ -119,7 +124,8 @@ def exam_view(request, username, exam_id):
             for choice in qn.choice_set.all():
                 if (choice.is_correct and str(choice.id) not in selected) or (not choice.is_correct and str(choice.id) in selected):
                     marked_correct = False
-                    break
+                if str(choice.id) in selected:
+                    Response.objects.create(attendee_fk=attendee, question=qn, choice=choice)
             
             if marked_correct:
                 total_marks += exam.qn_mark
@@ -127,7 +133,11 @@ def exam_view(request, username, exam_id):
                 if selected:
                     total_marks -= exam.neg_mark
         
-        attendee = Attendee.objects.create(exam_fk=exam, student_fk=student, total_marks=total_marks)
+        attendee.total_marks=total_marks
+        # attendee.excel_file.save('new', File(attendee.export_users_xls()))
+
+        attendee.save()
+
         return HttpResponseRedirect(reverse('stud_app:scores', args=[username,]))
 
     else:
@@ -137,7 +147,8 @@ def exam_view(request, username, exam_id):
                 'exam': exam,
                 # 'response_formset': response_formset,
                 'questions': questions,
-                'time_in_sec': int(exam.time_limit.total_seconds())
+                'time_in_sec': int(exam.time_limit.total_seconds()),
+                'current_page': 'exams',
         }
         return render(request, 'stud_app/exam.html', context)
         
@@ -154,5 +165,6 @@ def scores_view(request, username):
         context = { 
                 'username': username,
                 'exams_attended': exams_attended,
+                'current_page': 'scores',
             } 
         return render(request, 'stud_app/scores.html', context)

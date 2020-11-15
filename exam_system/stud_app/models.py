@@ -27,14 +27,37 @@ class Course(models.Model):
     def __str__(self):
         return self.course_name
 
+class Faculty(models.Model):
+    user = models.OneToOneField(User, related_name='faculty_user', on_delete=models.CASCADE, unique=True)
+    course_fk = models.ManyToManyField(Course)  
+    dept_fk = models.ForeignKey('Department', on_delete=models.CASCADE, null=True, blank=True)
+    phone_no = models.CharField(max_length=10, null=True, blank=True, unique=True, help_text='10-digit phone number')
+
+    joined_on = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username}"
+
+    def get_name(self):
+        return f'{self.user.first_name} {self.user.last_name}'
+    
+    def get_username(self):
+        return self.user.username
+
+    # def get_absolute_url(self):
+    #     return reverse('stud_app:home', kwargs={'username': self.get_username()})
+
+    class Meta:
+        ordering = ['dept_fk__dept_name']
+
 class Student(models.Model):
-    user = models.OneToOneField(User, related_name='usserrr', on_delete=models.CASCADE, unique=True)
+    user = models.OneToOneField(User, related_name='student_user', on_delete=models.CASCADE, unique=True)
     course_fk = models.ManyToManyField(Course)  
     dept_fk = models.ForeignKey('Department', on_delete=models.CASCADE, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     phone_no = models.CharField(max_length=10, null=True, blank=True, unique=True, help_text='10-digit phone number')
 
-    year_joined = models.DateField(null=True, blank=True)
+    joined_on = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username}"
@@ -110,13 +133,25 @@ class Question(models.Model):
     qn_image = models.ImageField('Question Image', null=True, blank=True)
     # qn_tag = models.ForeignKey('QuestionTag', verbose_name='Tag', on_delete=models.CASCADE, null=True, blank=True)
     exams = models.ManyToManyField('Exam')
-    course_fk = models.ForeignKey(Course, verbose_name='Course', on_delete=models.CASCADE, null=True, blank=True)
+    # course_fk = models.ForeignKey(Course, verbose_name='Course', on_delete=models.CASCADE, null=True, blank=True)
     pub_date = models.DateTimeField('date published', auto_now_add=True, editable=False)
     # qn_image = ImageWithThumbsField('Question Image', upload_to='img/', sizes=((125,125),(300,200)))
     # correct_choice = models.ForeignKey(Choice)
 
     def __str__(self):
         return self.qn_text[:70]
+
+    # def validate_unique(self):
+    #     sol_exists = False
+    #     # question = self.cleaned_data['question']
+    #     for choice in self.choice_set.all():
+    #         if choice.is_correct:
+    #              sol_exists = True
+    #     if not sol_exists:
+    #         raise forms.ValidationError("Enter the correct solution")
+        
+    #     super(Question, self).validate_unique(exclude=exclude)
+    #     # return self.cleaned_data
 
     # def image_tag(self):
     #     from django.utils.html import escape
@@ -145,8 +180,9 @@ class Question(models.Model):
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
-    is_selected = models.BooleanField('Correct Answer', default=False, null=True, blank=True)
+    is_selected = models.BooleanField('Selected Answer', default=False, null=True, blank=True)
     is_correct = models.BooleanField('Correct Answer', default=False)
+
 
     def __str__(self):
         return self.choice_text
@@ -157,6 +193,38 @@ class Attendee(models.Model):
     student_fk = models.ForeignKey(Student, on_delete=models.CASCADE)
     total_marks = models.FloatField(null=True, blank=True)
     submitted_on = models.DateTimeField(auto_now_add=True, null=True, blank=True, editable=False)
+    # excel_file = models.FileField(upload_to='media/', null=True, blank=True)
+
+    def export_users_xls():
+        # response = HttpResponse(content_type='application/ms-excel')
+        # response['Content-Disposition'] = 'attachment; filename= "users.xls"'
+
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('Scores')
+
+        # Sheet header, first row
+        row_num = 0
+
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+
+        columns = ['Student', 'Scores']
+
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
+
+        # Sheet body, remaining rows
+        font_style = xlwt.XFStyle()
+
+        rows = Attendee.objects.filter(exam_fk=self.exam_fk).values_list('student_fk', 'total_marks')
+        for row in rows:
+            row_num += 1
+            for col_num in range(len(row)):
+                ws.write(row_num, col_num, row[col_num], font_style)
+
+        filename = str(self)+".xls"
+        wb.save(filename)
+        return filename
 
     def __str__(self):
         return f'{self.exam_fk.exam_name} : {self.student_fk.get_name()}'
@@ -166,8 +234,14 @@ class Attendee(models.Model):
 
 class Response(models.Model):
     attendee_fk = models.ForeignKey('Attendee', on_delete=models.CASCADE)
-    # question = models.ForeignKey('Question', on_delete=models.CASCADE)
+    question = models.ForeignKey('Question', on_delete=models.CASCADE, blank=True, null=True)
     choice = models.ForeignKey('Choice', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.student_fk.user.username
+        return f'{self.attendee_fk.exam_fk.exam_name} : {self.attendee_fk.student_fk.user.username}'
+
+# class DownloadExcel(models.Model):
+#     exam_fk = models.ForeignKey('Exam', on_delete=models.CASCADE)
+#     excel_file = models.FileFieldPath()
+
+    
