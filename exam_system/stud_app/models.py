@@ -35,6 +35,11 @@ class Faculty(models.Model):
 
     joined_on = models.DateField(null=True, blank=True)
 
+    # def __str__(self):
+    #     if len(self.get_name()) <= 1:
+    #         return f"{self.user.username}"
+    #     else:
+    #         return f"{self.get_name()}"
     def __str__(self):
         return f"{self.user.username}"
 
@@ -59,6 +64,11 @@ class Student(models.Model):
 
     joined_on = models.DateField(null=True, blank=True)
 
+    # def __str__(self):
+    #     if len(self.get_name()) <= 1:
+    #         return f"{self.user.username}"
+    #     else:
+    #         return f"{self.get_name()}"
     def __str__(self):
         return f"{self.user.username}"
 

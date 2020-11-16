@@ -112,9 +112,9 @@ class StudentAdmin(admin.ModelAdmin):
     ]
     # inlines = [UserInline]
     list_display = ['user','dept_fk', 'joined_on']   #course fk
-    # list_filter = ['user.username']
+    list_filter = ['dept_fk__dept_code']
     
-    # search_fields = ['dept_fk']
+    search_fields = ['user__first_name']
     # readonly_fields = ('pub_date',)
 
 class FacultyAdmin(admin.ModelAdmin):
@@ -126,9 +126,9 @@ class FacultyAdmin(admin.ModelAdmin):
     ]
     # inlines = [UserInline]
     list_display = ['user','dept_fk', 'joined_on']   #course fk
-    # list_filter = ['user.username']
+    list_filter = ['dept_fk__dept_code']
     
-    # search_fields = ['dept_fk']
+    search_fields = ['user__first_name']
     # readonly_fields = ('pub_date',)
 
 
@@ -236,8 +236,9 @@ class ExamAdmin(admin.ModelAdmin):
     ]
     # inlines = [CourseInline]
     list_display = ['exam_name','course_fk', 'is_active']
-    search_fields = ['exam_name']
+    list_filter = ['pub_date']
 
+    search_fields = ['exam_name']
     readonly_fields = ('pub_date','created_on','updated_on',)
 
 class MyUserAdmin(UserAdmin):
@@ -248,8 +249,6 @@ class MyUserAdmin(UserAdmin):
         ),
     )
 
-
-
 class AttendeeAdmin(admin.ModelAdmin, ExportCsvMixin):
     fieldsets = [
         ('Attendee Info',         {'fields': ['student_fk', 'exam_fk']}),
@@ -257,7 +256,7 @@ class AttendeeAdmin(admin.ModelAdmin, ExportCsvMixin):
     ]
     list_display = ['exam_fk', 'student_fk', 'total_marks']   #course fk
     list_filter = ['submitted_on']
-    search_fields = ['exam_fk']
+    search_fields = ['exam_fk__exam_name']
     readonly_fields = ('student_fk', 'exam_fk','submitted_on',)
 
     actions = ["export_as_csv",]   #"export_as_xls",
