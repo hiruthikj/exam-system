@@ -211,6 +211,4 @@ class Response(models.Model):
 
 # class DownloadExcel(models.Model):
 #     exam_fk = models.ForeignKey('Exam', on_delete=models.CASCADE)
-#     excel_file = models.FileFieldPath()
-
-    
+#     excel_file = models.FileFieldPath()    

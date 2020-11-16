@@ -9,6 +9,8 @@ admin.site.site_header = 'Exam administration'
 
 import csv
 from django.http import HttpResponse
+# import xlwt
+
 class ExportCsvMixin:
     def export_as_csv(self, request, queryset):
 
@@ -25,7 +27,51 @@ class ExportCsvMixin:
 
         return response
 
-    export_as_csv.short_description = "Export Selected Records"
+    export_as_csv.short_description = "Export as CSV"
+
+# class ExportExcelMixin:
+#     def export_as_xls(self, request, queryset):
+
+#         meta = self.model._meta
+
+#         response = HttpResponse(content_type='application/ms-excel')
+#         response['Content-Disposition'] = 'attachment; filename={}'.format(meta)
+
+#         wb = xlwt.Workbook(encoding='utf-8')
+#         ws = wb.add_sheet(str(meta))
+
+#         # Sheet header, first row
+#         row_num = 0
+
+#         font_style = xlwt.XFStyle()
+#         font_style.font.bold = True
+
+#         field_names = [field.name for field in meta.fields]
+
+#         for col_num in range(len(field_names)):
+#             ws.write(row_num, col_num, field_names[col_num], font_style)
+
+#         # Sheet body, remaining rows
+#         font_style = xlwt.XFStyle()
+
+#         # for obj in queryset:
+#         #     row = writer.writerow([getattr(obj, field) for field in field_names])
+
+#         for obj in queryset:
+#             row_num += 1
+#             row = [getattr(obj, field) for field in field_names]
+#             for col_num in range(len(row)):
+#                 ws.write(row_num, col_num, row[col_num], font_style)
+
+#         # for row in rows:
+#         #     row_num += 1
+#         #     for col_num in range(len(row)):
+#         #         ws.write(row_num, col_num, row[col_num], font_style)
+
+#         wb.save(response)
+#         return response
+
+#     export_as_xls.short_description = "Export as Excel"
 
 # import nested_admin
 
@@ -215,8 +261,8 @@ class AttendeeAdmin(admin.ModelAdmin, ExportCsvMixin):
     search_fields = ['exam_fk']
     readonly_fields = ('student_fk', 'exam_fk','submitted_on',)
 
-    actions = ["export_as_csv"]
-
+    actions = ["export_as_csv",]   #"export_as_xls",
+ 
 
 ########################################################################
 # Register your models here.

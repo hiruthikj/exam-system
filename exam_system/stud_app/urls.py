@@ -13,7 +13,7 @@ urlpatterns = [
     # url('login/',  views.StudentView.as_view(), name="login"),
 
     path('', views.blank_page),
-    path('login/',  views.login_view, name="login"),
+    path('login/', views.login_view, name="login"),
     path('logout/', LogoutView.as_view(template_name='stud_app/logout.html'), name="logout"),
     path('<username>/home/', views.home_view, name="home"),
     path('<username>/courses/', views.courses_view, name="courses"),
