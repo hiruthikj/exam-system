@@ -171,7 +171,6 @@ class ChoiceInline(admin.TabularInline):
     form = ChoiceForm
 
 class QuestionAdmin(admin.ModelAdmin):
-
     fieldsets = [
         ('Exam Info',         {'fields': ['exams']}),
         ('Question Info',       {'fields': ['qn_text','pub_date','qn_image',]}),
