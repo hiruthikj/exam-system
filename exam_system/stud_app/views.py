@@ -13,6 +13,39 @@ from django.utils import timezone
 import xlwt
 from django.core.files import File
 
+def export_users_xls():
+        # response = HttpResponse(content_type='application/ms-excel')
+        # response['Content-Disposition'] = 'attachment; filename= "users.xls"'
+
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('Scores')
+
+        # Sheet header, first row
+        row_num = 0
+
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+
+        columns = ['Student', 'Scores']
+
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
+
+        # Sheet body, remaining rows
+        font_style = xlwt.XFStyle()
+
+        rows = Attendee.objects.filter(exam_fk=self.exam_fk).values_list('student_fk', 'total_marks')
+        for row in rows:
+            row_num += 1
+            for col_num in range(len(row)):
+                ws.write(row_num, col_num, row[col_num], font_style)
+
+        filename = str(self)+".xls"
+        wb.save(filename)
+        return filename
+
+
+
 # @login_required(login_url=reverse('stud_app:login'))       circular call
 # @login_required(login_url='/students/login')
 def home_view(request, username):

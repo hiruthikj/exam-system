@@ -6,6 +6,27 @@ from .forms import Group, GroupAdminForm
 from django import forms
 
 admin.site.site_header = 'Exam administration'
+
+import csv
+from django.http import HttpResponse
+class ExportCsvMixin:
+    def export_as_csv(self, request, queryset):
+
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response)
+
+        writer.writerow(field_names)
+        for obj in queryset:
+            row = writer.writerow([getattr(obj, field) for field in field_names])
+
+        return response
+
+    export_as_csv.short_description = "Export Selected Records"
+
 # import nested_admin
 
 
@@ -182,19 +203,22 @@ class MyUserAdmin(UserAdmin):
         ),
     )
 
-class AttendeeAdmin(admin.ModelAdmin):
 
+
+class AttendeeAdmin(admin.ModelAdmin, ExportCsvMixin):
     fieldsets = [
         ('Attendee Info',         {'fields': ['student_fk', 'exam_fk']}),
         ('Exam Info',           {'fields': ['total_marks','submitted_on',]}),
     ]
     list_display = ['exam_fk', 'student_fk', 'total_marks']   #course fk
     list_filter = ['submitted_on']
-    
     search_fields = ['exam_fk']
     readonly_fields = ('student_fk', 'exam_fk','submitted_on',)
 
+    actions = ["export_as_csv"]
 
+
+########################################################################
 # Register your models here.
 
 # admin.site.unregister(User)
