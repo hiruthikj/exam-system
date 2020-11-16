@@ -1,13 +1,6 @@
-/* #MyNav{
-    margin-bottom: 10px;
-}
-#univLogo{
-    color: #5f2c82;
-}
-
-body, html {
+/* body, html {
     height: 100%;
-    /* background-repeat: no-repeat; */
+    background-repeat: no-repeat;
     background-repeat: repeat;
     background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
     background-attachment: fixed;
@@ -17,12 +10,13 @@ body, html {
   margin-bottom: 10px;
 }
 #univLogo{
-  color: #5f2c82;
+  color: darkorange;
 }
 
 body, html {
     height: 100%;
     background-repeat: no-repeat;
+    background-attachment: fixed;
     /* background-color: #85FFBD;
     background-image: linear-gradient(45deg, #85FFBD 0%, #FFFB7D 100%); */
     /* background-image: radial-gradient( circle farthest-corner at 10% 20%,  rgba(153,103,186,1) 41.2%, rgba(0,113,227,1) 90% ); */

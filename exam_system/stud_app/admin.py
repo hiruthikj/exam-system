@@ -182,6 +182,18 @@ class MyUserAdmin(UserAdmin):
         ),
     )
 
+class AttendeeAdmin(admin.ModelAdmin):
+
+    fieldsets = [
+        ('Attendee Info',         {'fields': ['student_fk', 'exam_fk']}),
+        ('Exam Info',           {'fields': ['total_marks','submitted_on',]}),
+    ]
+    list_display = ['exam_fk', 'student_fk', 'total_marks']   #course fk
+    list_filter = ['submitted_on']
+    
+    search_fields = ['exam_fk']
+    readonly_fields = ('student_fk', 'exam_fk','submitted_on',)
+
 
 # Register your models here.
 
@@ -198,7 +210,7 @@ admin.site.register(Question, QuestionAdmin)
 
 admin.site.register(Exam, ExamAdmin)
 admin.site.register(Response)
-admin.site.register(Attendee)  
+admin.site.register(Attendee, AttendeeAdmin)  
 
 # Unregister the original Group admin.
 admin.site.unregister(Group)

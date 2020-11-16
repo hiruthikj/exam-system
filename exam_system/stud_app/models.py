@@ -20,9 +20,9 @@ class Department(models.Model):
 class Course(models.Model):
     course_code = models.CharField(max_length=6, unique=True)
     course_name = models.CharField(max_length=50)
-    dept_fk = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
+    dept_fk = models.ForeignKey(Department, on_delete=models.PROTECT)
     #dept_fk = models.ManyToManyField(Department, on_delete=models.SET_NULL)
-    course_desc = models.TextField('Course Description',max_length=100,null=True,blank=True)
+    course_desc = models.TextField('Course Description',max_length=300,null=True,blank=True)
     
     def __str__(self):
         return self.course_name
@@ -30,8 +30,8 @@ class Course(models.Model):
 class Faculty(models.Model):
     user = models.OneToOneField(User, related_name='faculty_user', on_delete=models.CASCADE, unique=True)
     course_fk = models.ManyToManyField(Course)  
-    dept_fk = models.ForeignKey('Department', on_delete=models.CASCADE, null=True, blank=True)
-    phone_no = models.CharField(max_length=10, null=True, blank=True, unique=True, help_text='10-digit phone number')
+    dept_fk = models.ForeignKey('Department', on_delete=models.PROTECT)
+    phone_no = models.CharField(max_length=10, unique=True, help_text='10-digit phone number')
 
     joined_on = models.DateField(null=True, blank=True)
 
@@ -53,9 +53,9 @@ class Faculty(models.Model):
 class Student(models.Model):
     user = models.OneToOneField(User, related_name='student_user', on_delete=models.CASCADE, unique=True)
     course_fk = models.ManyToManyField(Course)  
-    dept_fk = models.ForeignKey('Department', on_delete=models.CASCADE, null=True, blank=True)
+    dept_fk = models.ForeignKey('Department', on_delete=models.PROTECT)
     birth_date = models.DateField(null=True, blank=True)
-    phone_no = models.CharField(max_length=10, null=True, blank=True, unique=True, help_text='10-digit phone number')
+    phone_no = models.CharField(max_length=10, unique=True, help_text='10-digit phone number')
 
     joined_on = models.DateField(null=True, blank=True)
 
@@ -92,7 +92,7 @@ class Student(models.Model):
 
 class Exam(models.Model):
     exam_name = models.CharField(max_length=40, unique=True)
-    course_fk = models.ForeignKey(Course, verbose_name='Course', on_delete=models.CASCADE, null=True, blank=True)
+    course_fk = models.ForeignKey(Course, verbose_name='Course', on_delete=models.CASCADE)
     # question_fk = models.ManyToManyField('Question')
 
     qn_mark = models.FloatField(default=4, null=True, blank=True)
@@ -104,8 +104,8 @@ class Exam(models.Model):
 
     is_active = models.BooleanField(default=True)
 
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    created_on = models.DateTimeField(auto_now_add=True, editable=False)
+    updated_on = models.DateTimeField(auto_now=True, editable=False)
     pub_date = models.DateTimeField('Date Published', auto_now_add=True, editable=False)
 
     def was_published_recently(self):
@@ -227,15 +227,15 @@ class Attendee(models.Model):
         return filename
 
     def __str__(self):
-        return f'{self.exam_fk.exam_name} : {self.student_fk.get_name()}'
+        return f'{self.exam_fk.exam_name} - {self.student_fk.get_name()}'
 
     def recent(self):
         return self.exams_fk.start_time
 
 class Response(models.Model):
     attendee_fk = models.ForeignKey('Attendee', on_delete=models.CASCADE)
-    question = models.ForeignKey('Question', on_delete=models.CASCADE, blank=True, null=True)
-    choice = models.ForeignKey('Choice', on_delete=models.CASCADE)
+    question = models.ForeignKey('Question', on_delete=models.SET_NULL, blank=True, null=True)
+    choice = models.ForeignKey('Choice', on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return f'{self.attendee_fk.exam_fk.exam_name} : {self.attendee_fk.student_fk.user.username}'
