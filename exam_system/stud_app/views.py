@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.db.models import Q
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 
 from .models import *
 from .forms import *
@@ -31,9 +32,14 @@ def login_view(request):
             return render(request, 'stud_app/login.html', context)
         else:
             if student.user.check_password(password):
-                # return HttpResponse("HOME")
-                # return HttpResponseRedirect('students/home/')
+                # if student.user.is_authenticated:
+                #     return HttpResponseRedirect(reverse('stud_app:home', args=[username,]))
+                # else:
+                #     return HttpResponse('not authenticated')
+                user = authenticate(username=username, password=password)
+                login(request, user)
                 return HttpResponseRedirect(reverse('stud_app:home', args=[username,]))
+
             else:
                 context = { 
                 'wrong_password' : True,
@@ -51,7 +57,7 @@ def login_view(request):
 
 # @login_required(login_url=reverse('stud_app:login'))       #circular call
 # @login_required(login_url='/students/login')
-# @login_required()
+@login_required()
 def home_view(request, username):
     student = Student.objects.get(user__username = username)
 
@@ -63,7 +69,7 @@ def home_view(request, username):
         
     })
 
-# @login_required()
+@login_required()
 def courses_view(request, username):
     if request.method == 'POST':
         pass
@@ -77,7 +83,7 @@ def courses_view(request, username):
             } 
         return render(request, 'stud_app/courses.html', context)
 
-# @login_required()
+@login_required()
 def exam_list_view(request, username):
     if request.method == 'POST':
         exams = Exam.objects.all()
@@ -94,7 +100,8 @@ def exam_list_view(request, username):
         exams = Exam.objects.filter(Q(course_fk__in=courses))
         unattended_exams = Exam.objects.filter(
             ~Q(attendee__exam_fk__in=exams),
-            Q(is_active=True)
+            Q(is_active=True),
+            Q(course_fk__in=student.course_fk.all())
         )
 
         context = { 
@@ -105,7 +112,7 @@ def exam_list_view(request, username):
             } 
         return render(request, 'stud_app/exam_list.html', context)
 
-# @login_required()
+@login_required()
 def exam_view(request, username, exam_id):
     student = get_object_or_404(Student, user__username = username)
     exam = Exam.objects.get(id=exam_id)
@@ -151,7 +158,7 @@ def exam_view(request, username, exam_id):
         }
         return render(request, 'stud_app/exam.html', context)
         
-# @login_required()
+@login_required()
 def scores_view(request, username):
     if request.method == 'POST':
         pass
@@ -160,10 +167,15 @@ def scores_view(request, username):
         student = get_object_or_404(Student, user__username = username)
         # courses = student.course_fk.all()
         exams_attended = Attendee.objects.filter(student_fk=student)
+        
+        # max_marks = []
+        # for exam_attended in exams_attended:
+        #     max_marks.append( exam_attended.exam_fk.qn_mark * exam_attended.exam_fk.question_set.all().count )
 
         context = { 
                 'username': username,
                 'exams_attended': exams_attended,
                 'current_page': 'scores',
+                # 'max_marks': max_marks,
             } 
         return render(request, 'stud_app/scores.html', context)

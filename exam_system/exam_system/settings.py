@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # third-party apps
-    # 'django_extensions',
+    'django_extensions',
     # 'nested_admin',
     # 'durationwidget',
     # local apps
@@ -129,7 +129,7 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# LOGIN_URL = '/students/login/'
+LOGIN_URL = '/students/login/'
 #
 # LOGIN_URL = reverse('stud_app:login') wont work as apps arent loaded
 #  
