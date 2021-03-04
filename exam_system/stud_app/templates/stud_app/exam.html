@@ -1,16 +1,13 @@
 {% extends 'base.html' %}
-{% load static %}
+ {% load static %}
+ 
+ {% block title %} {{ exam.exam_name }} {% endblock %} 
+ {% block head %}
+<link rel="stylesheet" href="{% static 'stud_app/css/exam.css' %}" />
+<link rel="stylesheet" href="{% static 'stud_app/css/progressbar.css' %}" />
+<script src="{% static 'stud_app/js/exam.js' %}"></script>
+{% endblock %} 
 
-{% block title %} {{ exam.exam_name }} {% endblock %}
-
-
-{% block head %}
-    <link rel="stylesheet" href="{% static 'stud_app/css/exam.css' %}">
-    <link rel="stylesheet" href="{% static 'stud_app/css/progressbar.css' %}">
-    <script src="{% static 'stud_app/js/exam.js' %}"></script>
-{% endblock %}
-    
-    
 {% block content %}
 
 <script>
@@ -45,77 +42,64 @@
         }, 1000);
     });
     }
-
 </script>
 
 <div class="container">
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card text-white bg-info mb-3 examcard">
+                <div class="card-header">
+                    <h4 style="text-align: center;">{{ exam.exam_name }}</h4>
+                    <h5 class="card-title" style="text-align: center;">{{ exam.course_fk.course_name }}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-primary" role="alert">
+                        Each question has {{ exam.qn_mark }} mark{{ exam.qn_mark|pluralize }}
+                    </div>
 
-<div class="row">
-<div class="col-6 offset-3">
+                    <div class="alert alert-warning" role="alert">
+                        Incorrect answers has negative mark of {{ exam.neg_mark }} mark{{ exam.neg_mark|pluralize }}
+                    </div>
 
-  <div class="card text-white bg-info mb-3 examcard">
-    <div class="card-header"><h4 style="text-align: center;">{{ exam.exam_name }}</h4>
-    <h5 class="card-title" style="text-align: center;">{{ exam.course_fk.course_name }}</h5>
-    </div>
-    <div class="card-body">
-        <div class="alert alert-primary" role="alert">
-            Each question has {{ exam.qn_mark }} mark{{ exam.qn_mark|pluralize }}
-          </div>
-
-      <div class="alert alert-warning" role="alert">
-        Incorrect answers has negative mark of {{ exam.neg_mark }} mark{{ exam.neg_mark|pluralize }}      
+                    <div class="alert alert-danger" role="alert">
+                        <p>Remaining Time: <span id="pageBeginCountdownText">{{ time_in_sec }} seconds</span></p>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" role="progressbar" style="width: 100%;" aria-valuenow="{{ time_in_sec }}" aria-valuemin="0" aria-valuemax="{{ time_in_sec }}"></div>
+                        </div>
+                        <!-- <progress value="{{ time_in_sec }}" max="{{ time_in_sec }}" id="pageBeginCountdown"></progress> -->
+                    </div>
+                </div>
+            </div>
         </div>
-        
-
-        <div class="alert alert-danger" role="alert">
-            <p>Remaining Time: <span id="pageBeginCountdownText">{{ time_in_sec }} seconds</span></p>
-            <div class="progress">
-                <div class="progress-bar progress-bar-animated progress-bar-striped bg-success" role="progressbar" style="width: 100%" aria-valuenow="{{ time_in_sec }}" aria-valuemin="0" aria-valuemax="{{ time_in_sec }}"></div>
-            </div>    
-            <!-- <progress value="{{ time_in_sec }}" max="{{ time_in_sec }}" id="pageBeginCountdown"></progress> -->
-        </div>
-     
     </div>
-
-
-    </div>
-  </div>
 </div>
-</div>
-
 
 <form action="" method="post">
-    {% csrf_token %}
-
-
+    {% csrf_token %} 
     {% for qn in questions %}
-        
+
     <div class="row">
         <!-- the cols in this div change the number of cards per row depending on screen size and the mb-4 adds space below cards if they spill over into the next row-->
         <div class="col-8 offset-2">
             <div class="card myqn">
-                
                 {% if qn.qn_image %}
-                <img class="card-img-top" src="{{ qn.qn_image.url }}" alt="Card image cap">
+                <img class="card-img-top" src="{{ qn.qn_image.url }}" alt="Card image cap" />
                 {% endif %}
-                    
-                
-                <div class="card-body">
-                <p class="card-text">{{ forloop.counter }}) {{ qn.qn_text }}</p>
 
-                {% for choice in qn.choice_set.all %}
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text">
-                        <input type="checkbox" name="{{qn.id}}" value="{{ choice.id }}"  id="{{qn.id}} {{choice.id}}">
-                      </div>
-                      <!-- <input type="text" class="form-control" aria-label="Text input with checkbox"> -->
-                      <label for="{{qn.id}} {{choice.id}}" style="margin-left: 5px;">{{ choice }}</label><br>
+                <div class="card-body">
+                    <p class="card-text">{{ forloop.counter }}) {{ qn.qn_text }}</p>
+
+                    {% for choice in qn.choice_set.all %}
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input type="checkbox" name="{{qn.id}}" value="{{ choice.id }}" id="{{qn.id}} {{choice.id}}" />
+                            </div>
+                            <!-- <input type="text" class="form-control" aria-label="Text input with checkbox"> -->
+                            <label for="{{qn.id}} {{choice.id}}" style="margin-left: 5px;">{{ choice }}</label><br />
+                        </div>
                     </div>
-                    
-                </div> 
-                {% endfor %}
-                
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -123,38 +107,30 @@
     {% endfor %}
 
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter" 
-        id="mysubmit" style="display: block; margin:20px auto; margin-bottom: 20px;">Submit</button>
-    
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter" id="mysubmit" style="display: block; margin: 20px auto; margin-bottom: 20px;">Submit</button>
+
     <!-- Modal -->
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalCenterTitle">Confirm Submission</h5>
-            <button type="button" class="close" data-dismiss="modal">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Confirm Submission</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Remaining Time: <span id="pageBeginCountdownText2">{{ time_in_sec }} seconds</span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success" id="modalsubmit" onclick="formsubmitted=true">Submit</button>
+                </div>
             </div>
-            <div class="modal-body">
-                <p>Remaining Time: <span id="pageBeginCountdownText2">{{ time_in_sec }} seconds</span></p>
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-success" id="modalsubmit" onclick="formsubmitted=true">Submit</button>
-            </div>
-        </div>
         </div>
     </div>
 
     <!-- <input type="submit" class="btn btn-success" class="button"> -->
-    
 </form>
 
-</div>
-
 {% endblock content %}
-
-
-
-

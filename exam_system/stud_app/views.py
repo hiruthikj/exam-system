@@ -66,7 +66,6 @@ def home_view(request, username):
         'student' : student,
         'name': student.get_name(),
         'current_page': 'home',
-        
     })
 
 @login_required()
