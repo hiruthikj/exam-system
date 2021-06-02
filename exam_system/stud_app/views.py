@@ -98,7 +98,7 @@ def exam_list_view(request, username):
         courses = student.course_fk.all()
         exams = Exam.objects.filter(Q(course_fk__in=courses))
         unattended_exams = Exam.objects.filter(
-            ~Q(attendee__exam_fk__in=exams),
+            ~Q(attendee__exam_fk__in=exams, attendee__student_fk=student.id),
             Q(is_active=True),
             Q(course_fk__in=student.course_fk.all())
         )
